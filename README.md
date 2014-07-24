@@ -27,7 +27,7 @@ Its a way to attribute actions and behaviors to HTML elements and you can easily
 for example : 
 
 ```html
-<table border="1">
+<table border="1" x-controller="EmployeesController">
 	<thead>
 		<tr>
     		<th>Name</th>
