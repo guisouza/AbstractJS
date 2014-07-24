@@ -21,7 +21,7 @@ x.Controller('EmployeesController',[function(){
 Abstract xEngine
 =========
 Abstract xEngine is a parser system that gives your HTML super-powers.
-Its a way to attribute actions to HTML elements and you can easily make AjaxCalls form validations or even create controllers or models just with HTML.
+Its a way to attribute actions and behaviors to HTML elements and you can easily make AjaxCalls, form validations or even create controllers or models just with HTML.
 
 
 for example : 
