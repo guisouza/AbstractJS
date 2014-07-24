@@ -36,7 +36,7 @@ for example :
 			<th>Area</th>
 		</tr>
 	</thead>
-	<tbody x-content="js/script.js" x-model="funcionario" x-collection="allFuncionarios">
+	<tbody x-content="data.json" x-model="funcionario" x-collection="allFuncionarios">
 		<tr>
 			<td>{{name}}</td>
 			<td>{{age}}</td>
@@ -61,7 +61,7 @@ Will automatically be parsed into this :
 			<th>Area</th>
 		</tr>
 	</thead>
-    <tbody x-content="js/script.js" x-model="employees" x-collection="allEmployees">
+    <tbody x-content="data.json" x-model="employees" x-collection="allEmployees">
 		<tr>
 			<td>John</td>
 			<td>21</td>
