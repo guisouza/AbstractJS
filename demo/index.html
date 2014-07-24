@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>x-abstract.js</title>
+	</head>
+	<body>
+
+
+	<div x-controller="FuncionariosController">
+		<form method="GET" x-ajax="#" x-model="funcionario">
+				<input type="text" name="nome" value="John Sample" placeholder="John Sample">
+				<input type="text" name="idade" placeholder="98">
+				<input type="text" name="cargo" placeholder="Developer">
+				<input type="text" name="salario" placeholder="R$ 18000,00">
+				<input type="submit"/>
+		</form>
+		<form method="GET" x-ajax="#" x-model="funcionario">
+				<input type="text" name="nome" value="John Sample" placeholder="John Sample">
+				<input type="text" name="idade" placeholder="98">
+				<input type="text" name="cargo" placeholder="Developer">
+				<input type="text" name="salario" placeholder="R$ 18000,00">
+				<input type="submit"/>
+		</form>
+ 
+		<table border="1">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Age</th>
+					<th>Company</th>
+					<th>Area</th>
+				</tr>
+			</thead>
+			<tbody x-content="js/script.js" x-model="funcionario" x-collection="allFuncionarios">
+				<tr>
+					<td>{{name}}</td>
+					<td>{{age}}</td>
+					<td>{{company.name}}</td>
+					<td>{{company.area.name}}</td>
+					<td><button x-click="edit({{id}})">Edit</button></td>
+				</tr>
+			</tbody>
+		</table>
+		<button x-click='editar("texto")'>ALERT</button>
+
+		<div x-custom-component></div>
+	</div>
+
+		<script type="text/javascript" src="../dist/x.min.js"></script>
+		<script type="text/javascript" src="js/Controllers/EmployeesController.js"></script>
+		<script type="text/javascript" src="js/x-custom-component.js"></script>
+	</body>
+</html>
