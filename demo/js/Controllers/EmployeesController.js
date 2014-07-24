@@ -1,8 +1,12 @@
-x.Controller('FuncionariosController',[function(){
+x.Controller('EmployeesController',[function(){
 
-	this.editar = function(param){
-		record = this.allFuncionarios[param]
-		this.funcionario.edit(record);
+	this.edit = function(param){
+		record = this.allEmployees[param]
+		this.employee.edit(record);
+	}
+
+	this.alert = function(message){
+		alert(message);
 	}
 
 }]);

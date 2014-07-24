@@ -7,19 +7,10 @@
 	<body>
 
 
-	<div x-controller="FuncionariosController">
-		<form method="GET" x-ajax="#" x-model="funcionario">
-				<input type="text" name="nome" value="John Sample" placeholder="John Sample">
-				<input type="text" name="idade" placeholder="98">
-				<input type="text" name="cargo" placeholder="Developer">
-				<input type="text" name="salario" placeholder="R$ 18000,00">
-				<input type="submit"/>
-		</form>
-		<form method="GET" x-ajax="#" x-model="funcionario">
-				<input type="text" name="nome" value="John Sample" placeholder="John Sample">
-				<input type="text" name="idade" placeholder="98">
-				<input type="text" name="cargo" placeholder="Developer">
-				<input type="text" name="salario" placeholder="R$ 18000,00">
+	<div x-controller="EmployeesController">
+		<form method="GET" x-ajax="#" x-model="employee">
+				<input type="text" name="name" value="John Sample" placeholder="John Sample">
+				<input type="text" name="age" placeholder="98">
 				<input type="submit"/>
 		</form>
  
@@ -32,7 +23,7 @@
 					<th>Area</th>
 				</tr>
 			</thead>
-			<tbody x-content="js/script.js" x-model="funcionario" x-collection="allFuncionarios">
+			<tbody x-content="js/script.js" x-model="employee" x-collection="allEmployees">
 				<tr>
 					<td>{{name}}</td>
 					<td>{{age}}</td>
@@ -42,7 +33,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<button x-click='editar("texto")'>ALERT</button>
+		<button x-click='alert("MyText")'>ALERT</button>
 
 		<div x-custom-component></div>
 	</div>
