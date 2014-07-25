@@ -29,7 +29,7 @@
 			var name = el.getAttribute('name');
 			var value = el.value;
 			data[name] =  value;
-			//broadcast(data);
+			broadcast(data);
 		};
 
 		var absorveData = function(data,newData){
