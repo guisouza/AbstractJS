@@ -1,27 +1,27 @@
 //File : src/core/x.js
 
 (function(world){
-	'use strict';
-	NodeList.prototype.forEach = Array.prototype.forEach;
-	world.x = function(){ 
+  'use strict';
+  NodeList.prototype.forEach = Array.prototype.forEach;
+  world.x = function(){ 
 
-		return {
-			methods : {
+    return {
+      methods : {
 
-			},
-			controllers : {
+      },
+      controllers : {
 
-			},
-			core : {
-				randomString : function(){
-					return 'randomString';
-				},
-				parsers : {
+      },
+      core : {
+        randomString : function(){
+          return 'randomString';
+        },
+        parsers : {
 
-				}
-			}
-		};
-	}();
+        }
+      }
+    };
+  }();
 })(this);
 //File : src/core/coreMethods/x.core.addController.js
 
@@ -108,46 +108,48 @@
 //File : src/core/coreMethods/x.core.parse.js
 
 (function(x){
-	'use strict';
-	x.core.parse = function(){
 
-			if(typeof arguments[0] == 'string'){
-				applyParserGroup(arguments[0],arguments[1],arguments[2]);
-			}else{
-				var controllerElements = document.querySelectorAll('[x-controller]');
-				controllerElements.forEach(function(element,index){
-					var controller = x.core.parsers['x-controller'](element);
-					for(var parser in x.core.parsers){
-						if (typeof x.core.parsers[parser] == 'function'){
-							applyParser(parser,x.core.parsers[parser],element,controller);
-						}else{
-							applyParserGroup(parser,element,controller);
-						}
+  'use strict';
+  x.core.parse = function(){
 
-					}
-				});
+    if(typeof arguments[0] == 'string'){
+      applyParserGroup(arguments[0],arguments[1],arguments[2]);
+    }else{
+      var controllerElements = document.querySelectorAll('[x-controller]');
+      controllerElements.forEach(function(element,index){
+        var controller = x.core.parsers['x-controller'](element);
+        for(var parser in x.core.parsers){
+          if (typeof x.core.parsers[parser] == 'function'){
+            applyParser(parser,x.core.parsers[parser],element,controller);
+          }else{
+            console.log(parser);
+            console.log(element);
+            console.log(controller);
+            applyParserGroup(parser,element,controller);
+          }
+        }
+      });
+    }
 
-			}
+    function applyParserGroup(parserGroup,element,controller){
+      console.log(x.core.parsers[parserGroup]);
+      for (var parser in x.core.parsers[parserGroup]){
+        applyParser(parser,x.core.parsers[parserGroup][parser],element,controller);
+      }
+    }
 
-			function applyParserGroup(parserGroup,element,controller){
-					for (var parser in x.core.parsers[parserGroup]){
-						applyParser(parser,x.core.parsers[parserGroup][parser],element,controller);
-					}
-			}
+    function applyParser(selector,parser,element,controller){
+      if (parser != 'x-controller'){
+        var ELs = element.querySelectorAll('['+selector+']');
+        ELs.forEach(function(element){
+          parser(element,controller);
+        });
+      }
+    }
+  };
 
-			function applyParser(selector,parser,element,controller){
-					if (parser != 'x-controller'){
-
-						var ELs = element.querySelectorAll('['+selector+']');
-						ELs.forEach(function(element){
-
-							parser(element,controller);
-						});
-					}
-			}
-
-	};
 })(this.x);
+
 //File : src/core/parsers/x-ajax.js
 
 (function(x){
@@ -237,181 +239,189 @@
 //File : src/core/parsers/x-events.js
 
 (function(x){
-	'use strict';
+  'use strict';
 
-	x.core.addParser('events.x-click',function(element,controller){
+  x.core.addParser('events.x-click',function(element,controller){
 
-		var action = element.getAttribute('x-click');
-		var params = action.match(/\(.*\)/g)[0].replace('(','').replace(')','').split(',');
-		for(var param in params){
+    var action = element.getAttribute('x-click');
+    var params = action.match(/\(.*\)/g)[0].replace('(','').replace(')','').split(',');
+    for(var param in params){
 
-			if (params[param].indexOf('function') != -1){
-			}else{
-				if (params[param][0] != "'" && params[param][0] != '"' && params[param][0] != '['){
-					params[param] = parseInt(params[param]);
-				}else if (params[param][0] == "'" || params[param][0] == '"'){
+      if (params[param].indexOf('function') != -1){
+      }else{
+        if (params[param][0] != "'" && params[param][0] != '"' && params[param][0] != '['){
+          params[param] = parseInt(params[param]);
+        }else if (params[param][0] == "'" || params[param][0] == '"'){
 
-					params[param] = params[param].replace('"','').replace("'",'').replace('"','').replace("'",'').replace('"','').replace("'",'');
-				}
-			}
-		}
-		// console.log(params);
+          params[param] = params[param].replace('"','').replace("'",'').replace('"','').replace("'",'').replace('"','').replace("'",'');
+        }
+      }
+    }
 
+    action = action.match(/.*\(/g)[0].replace('(','');
+      element.addEventListener('click',function(){
+        console.log(controller);
+        controller[action].apply(controller,params);
+      });
 
-		action = action.match(/.*\(/g)[0].replace('(','');
-		element.addEventListener('click',function(){
-			console.log(controller);
-			controller[action].apply(controller,params);
-		});
+    });
 
-	});
+  x.core.addParser('events.x-mouseover',function(element,controller){
 
-	// x.core.addParser('x-content',function(element,controller){
+    var action = element.getAttribute('x-mouseover');
+    var params = action.match(/\(.*\)/g)[0].replace('(','').replace(')','').split(',');
+    for(var param in params){
 
-	// });
+      if (params[param].indexOf('function') != -1){
+      }else{
+        if (params[param][0] != "'" && params[param][0] != '"' && params[param][0] != '['){
+          params[param] = parseInt(params[param]);
+        }else if (params[param][0] == "'" || params[param][0] == '"'){
 
+          params[param] = params[param].replace('"','').replace("'",'').replace('"','').replace("'",'').replace('"','').replace("'",'');
+        }
+      }
+    }
 
-})(this.x);
-//File : src/controller.js
+    action = action.match(/.*\(/g)[0].replace('(','');
+      element.addEventListener('mouseover',function(){
+        console.log(controller);
+        controller[action].apply(controller,params);
+      });
 
-(function(x){
-	'use strict';
+  });
 
-	x.xModel = function(){
-		console.log(arguments);
-
-	};
-
-})(this.x);
-//File : src/controller.js
-
-(function(x){
-	'use strict';
-
-	x.Controller = function(controllerName,htmlElement){
-
-		//Check if this controller is being generated by DOM or API
-		if (arguments[1].tagName || arguments[1] == 'API_CALL'){
-
-			this.htmlElement = htmlElement;
-			this.controllerName = controllerName;
-
-			return {
-				appendModel : function(model){
-					this[model.getModelName()] = model; 
-				}
-			};
-			
-		}else{
-
-			if (x.controllers[controllerName] === undefined){
-				//Controller dont exists
-				x.controllers[controllerName] = new x.Controller(controllerName,'API_CALL');
-			}
-			arguments[1][arguments[1].length-1].call(x.controllers[controllerName]);
-			return x.controllers[controllerName];
-		}
-	};
 
 })(this.x);
 //File : src/controller.js
 
 (function(x){
-	'use strict';
+  'use strict';
 
-	x.Model = function(controller,htmlElement){
-		var self = this;
-		var data = {};
-		var modelName = htmlElement.getAttribute('x-model');
+  x.xModel = function(){
+    console.log(arguments);
 
-		var htmlElements = [htmlElement];
-
-		var getInputs = function(){
-			var elements = htmlElement.getElementsByTagName('input');
-			var temp = {};
-			for(var element in elements){
-				if (typeof elements[element]  == 'object'){
-					var field = elements[element].getAttribute('name');
-					temp[field] = elements[element].value;
-					elements[element].addEventListener('keypress',inputChange);
-					elements[element].addEventListener('change',inputChange);
-				}
-			}
-			return absorveData(data,temp);
-		};
-
-		var inputChange = function(e){
-			var el = e.target;
-			var name = el.getAttribute('name');
-			var value = el.value;
-			data[name] =  value;
-			//broadcast(data);
-		};
-
-		var absorveData = function(data,newData){
-			for(var field in newData){
-				data[field] = newData[field];
-			}
-			return data;
-		};
-
-		var broadcast = function(data){
-			for(var propertie in data){
-				applyValues(propertie,data[propertie]);
-			}
-		};
-
-		var applyValues = function(propertie,value){
-
-			htmlElements.forEach(function(element){
-				element.querySelectorAll('[name="'+propertie+'"]').forEach(function(a,b){
-					a.value = value;
-				});
-			});
-
-		};
-
-		var  structByDom = function(){
-			absorveData(getInputs(),data);
-			return Model;
-		};
-
-		var editData = function(record){
-			broadcast(record);
-			return record;
-		};
-
-		structByDom();
-
-		var Model = this;
-		return {
-			appendDom : function(element){
-				htmlElements.push(element);
-			},
-			getModelName : function(){
-				return modelName;
-			},
-			getData : function(){
-				var result = {};
-				result[modelName] = data;
-				return result;
-			},
-			edit : function(record){
-				return editData(record);
-			}
-		};
-	};
+  };
 
 })(this.x);
 //File : src/controller.js
 
 (function(x){
-	'use strict';
+  'use strict';
 
-	x.xModel = function(){
-		console.log(arguments);
+  x.Controller = function(controllerName,htmlElement){
 
-	};
+    //Check if this controller is being generated by DOM or API
+    if (arguments[1].tagName || arguments[1] == 'API_CALL'){
+
+      this.htmlElement = htmlElement;
+      this.controllerName = controllerName;
+
+      return {
+        appendModel : function(model){
+          this[model.getModelName()] = model; 
+        }
+      };
+      
+    }else{
+
+      if (x.controllers[controllerName] === undefined){
+        //Controller dont exists
+        x.controllers[controllerName] = new x.Controller(controllerName,'API_CALL');
+      }
+      arguments[1][arguments[1].length-1].call(x.controllers[controllerName]);
+      return x.controllers[controllerName];
+    }
+  };
+
+})(this.x);
+//File : src/controller.js
+
+(function(x){
+  'use strict';
+
+  x.Model = function(controller,htmlElement){
+    var self = this;
+    var data = {};
+    var modelName = htmlElement.getAttribute('x-model');
+
+    var htmlElements = [htmlElement];
+
+    var getInputs = function(){
+      var elements = htmlElement.getElementsByTagName('input');
+      var temp = {};
+      for(var element in elements){
+        if (typeof elements[element]  == 'object'){
+          var field = elements[element].getAttribute('name');
+          temp[field] = elements[element].value;
+          elements[element].addEventListener('keypress',inputChange);
+          elements[element].addEventListener('change',inputChange);
+        }
+      }
+      return absorveData(data,temp);
+    };
+
+    var inputChange = function(e){
+      var el = e.target;
+      var name = el.getAttribute('name');
+      var value = el.value;
+      data[name] =  value;
+      broadcast(data);
+    };
+
+    var absorveData = function(data,newData){
+      for(var field in newData){
+        data[field] = newData[field];
+      }
+      return data;
+    };
+
+    var broadcast = function(data){
+      for(var propertie in data){
+        applyValues(propertie,data[propertie]);
+      }
+    };
+
+    var applyValues = function(propertie,value){
+
+      htmlElements.forEach(function(element){
+        element.querySelectorAll('[name="'+propertie+'"]').forEach(function(a,b){
+          a.value = value;
+        });
+      });
+
+    };
+
+    var  structByDom = function(){
+      absorveData(getInputs(),data);
+      return Model;
+    };
+
+    var editData = function(record){
+      broadcast(record);
+      return record;
+    };
+
+    structByDom();
+
+    var Model = this;
+    return {
+      appendDom : function(element){
+        htmlElements.push(element);
+      },
+      getModelName : function(){
+        return modelName;
+      },
+      getData : function(){
+        var result = {};
+        result[modelName] = data;
+        return result;
+      },
+      edit : function(record){
+        return editData(record);
+      }
+    };
+  };
 
 })(this.x);
 //File : src/methods/x.init.js

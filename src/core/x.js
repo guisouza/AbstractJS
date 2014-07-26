@@ -1,25 +1,25 @@
 //File : src/core/x.js
 
 (function(world){
-	'use strict';
-	NodeList.prototype.forEach = Array.prototype.forEach;
-	world.x = function(){ 
+  'use strict';
+  NodeList.prototype.forEach = Array.prototype.forEach;
+  world.x = function(){ 
 
-		return {
-			methods : {
+    return {
+      methods : {
 
-			},
-			controllers : {
+      },
+      controllers : {
 
-			},
-			core : {
-				randomString : function(){
-					return 'randomString';
-				},
-				parsers : {
+      },
+      core : {
+        randomString : function(){
+          return 'randomString';
+        },
+        parsers : {
 
-				}
-			}
-		};
-	}();
+        }
+      }
+    };
+  }();
 })(this);

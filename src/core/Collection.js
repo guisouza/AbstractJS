@@ -1,11 +1,11 @@
 //File : src/controller.js
 
 (function(x){
-	'use strict';
+  'use strict';
 
-	x.xModel = function(){
-		console.log(arguments);
+  x.xModel = function(){
+    console.log(arguments);
 
-	};
+  };
 
 })(this.x);
