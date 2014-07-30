@@ -15,9 +15,6 @@
           if (typeof x.core.parsers[parser] == 'function'){
             applyParser(parser,x.core.parsers[parser],element,controller);
           }else{
-            console.log(parser);
-            console.log(element);
-            console.log(controller);
             applyParserGroup(parser,element,controller);
           }
         }
@@ -25,7 +22,6 @@
     }
 
     function applyParserGroup(parserGroup,element,controller){
-      console.log(x.core.parsers[parserGroup]);
       for (var parser in x.core.parsers[parserGroup]){
         applyParser(parser,x.core.parsers[parserGroup][parser],element,controller);
       }

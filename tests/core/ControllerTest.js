@@ -53,7 +53,6 @@ describe('Testing X Controller', function () {
 
 		x.controllers = {};
 
-
 		var div = document.createElement('div');
 		div.setAttribute("x-controller","TestController");
 		document.body.appendChild(div);
@@ -69,5 +68,6 @@ describe('Testing X Controller', function () {
 		expect(x.controllers.TestController).not.toBeUndefined();
 
 	});
+
 
 });

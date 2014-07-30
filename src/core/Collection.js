@@ -3,8 +3,7 @@
 (function(x){
   'use strict';
 
-  x.xModel = function(){
-    console.log(arguments);
+  x.Collection = function(){
 
   };
 
