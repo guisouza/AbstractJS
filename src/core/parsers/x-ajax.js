@@ -7,13 +7,17 @@
 
 		if (element.tagName.toUpperCase() == 'FORM'){
 
-			var name = element.getAttribute('x-model');
+			if (element.getAttribute('x-model')){
 
-			if (!controller[name]){
-				controller.appendModel(new x.Model(controller,element));
+				var name = element.getAttribute('x-model');
 
-			}else{
-				controller[name].appendDom(element);
+				if (!controller[name]){
+					controller.appendModel(new x.Model(controller,element));
+
+				}else{
+					controller[name].appendDom(element);
+				}
+
 			}
 
 			element.addEventListener('submit', function(e) {

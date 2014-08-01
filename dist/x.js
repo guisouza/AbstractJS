@@ -60,7 +60,12 @@
 
 (function(x){
 	'use strict';
-	x.core.ajax = function(url,callback){
+	x.core.ajax = function(args){
+
+				var callback = args.callback || function(){return false;};
+				var url = args.url;
+				var method = args.method;
+				var data = argumetns.data || false;
 
 		        var xhr;
 		         
@@ -98,8 +103,17 @@
 		            }           
 		        }
 		         
-		        xhr.open('GET', url, true);
-		        xhr.send('');
+		        xhr.open(method, url, true);
+		        if (method.toUpperCase() == 'POST'){
+					xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+
+					//work with data
+
+					xmlhttp.send("fname=Henry&lname=Ford");
+		        }else{
+					xhr.send('');     	
+		        }
+
 
 	};
 
@@ -122,9 +136,6 @@
           if (typeof x.core.parsers[parser] == 'function'){
             applyParser(parser,x.core.parsers[parser],element,controller);
           }else{
-            console.log(parser);
-            console.log(element);
-            console.log(controller);
             applyParserGroup(parser,element,controller);
           }
         }
@@ -132,7 +143,6 @@
     }
 
     function applyParserGroup(parserGroup,element,controller){
-      console.log(x.core.parsers[parserGroup]);
       for (var parser in x.core.parsers[parserGroup]){
         applyParser(parser,x.core.parsers[parserGroup][parser],element,controller);
       }
@@ -159,13 +169,17 @@
 
 		if (element.tagName.toUpperCase() == 'FORM'){
 
-			var name = element.getAttribute('x-model');
+			if (element.getAttribute('x-model')){
 
-			if (!controller[name]){
-				controller.appendModel(new x.Model(controller,element));
+				var name = element.getAttribute('x-model');
 
-			}else{
-				controller[name].appendDom(element);
+				if (!controller[name]){
+					controller.appendModel(new x.Model(controller,element));
+
+				}else{
+					controller[name].appendDom(element);
+				}
+
 			}
 
 			element.addEventListener('submit', function(e) {
@@ -298,8 +312,7 @@
 (function(x){
   'use strict';
 
-  x.xModel = function(){
-    console.log(arguments);
+  x.Collection = function(){
 
   };
 

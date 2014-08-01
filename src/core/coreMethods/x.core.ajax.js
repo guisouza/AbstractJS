@@ -2,7 +2,12 @@
 
 (function(x){
 	'use strict';
-	x.core.ajax = function(url,callback){
+	x.core.ajax = function(args){
+
+				var callback = args.callback || function(){return false;};
+				var url = args.url;
+				var method = args.method;
+				var data = argumetns.data || false;
 
 		        var xhr;
 		         
@@ -40,8 +45,17 @@
 		            }           
 		        }
 		         
-		        xhr.open('GET', url, true);
-		        xhr.send('');
+		        xhr.open(method, url, true);
+		        if (method.toUpperCase() == 'POST'){
+					xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+
+					//work with data
+
+					xmlhttp.send("fname=Henry&lname=Ford");
+		        }else{
+					xhr.send('');     	
+		        }
+
 
 	};
 
