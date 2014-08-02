@@ -3,11 +3,11 @@
 (function(x){
 	'use strict';
 	x.core.ajax = function(args){
-
+				console.log('executing ajax');
 				var callback = args.callback || function(){return false;};
 				var url = args.url;
-				var method = args.method;
-				var data = argumetns.data || false;
+				var method = args.method || 'GET';
+				var data = args.data || false;
 
 		        var xhr;
 		         
@@ -25,7 +25,7 @@
 		                    break;
 		                }
 		                catch(e){}
-		             } // end for
+		             }
 		        }
 		         
 		        xhr.onreadystatechange = ensureReadiness;
@@ -41,17 +41,15 @@
 		 
 		            // all is well  
 		            if(xhr.readyState === 4) {
-		                callback(JSON.parse(xhr.response));
+		                callback(xhr.response);
 		            }           
 		        }
 		         
 		        xhr.open(method, url, true);
 		        if (method.toUpperCase() == 'POST'){
-					xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-
-					//work with data
-
-					xmlhttp.send("fname=Henry&lname=Ford");
+					xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+					data = x.core.serialize(data);
+					xhr.send(data);
 		        }else{
 					xhr.send('');     	
 		        }

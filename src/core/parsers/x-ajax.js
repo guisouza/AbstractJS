@@ -20,8 +20,19 @@
 
 			}
 
+			console.log(element.getAttribute('action'));
+
 			element.addEventListener('submit', function(e) {
 				e.preventDefault();
+				console.log('teste');
+				console.log(element.getAttribute('method'));
+				x.core.ajax({
+					method : element.getAttribute('method'),
+					url:element.getAttribute('action'),
+					callback:function(){
+						console.log('TODO : Simple ajax return ');
+					}
+				});
 			});
 
 		}else{

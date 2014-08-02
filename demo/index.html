@@ -6,16 +6,8 @@
 	</head>
 	<body>
 
-
-		<form method="GET" x-ajax="#">
-				<input type="text" name="name" value="John Sample" placeholder="John Sample">
-				<input type="text" name="age" placeholder="98">
-				<input type="submit"/>
-		</form>
-
-
 	<div x-controller="EmployeesController">
-		<form method="GET" x-ajax="#" x-model="employee">
+		<form method="POST" action="http://localhost:8080/x/teste" x-ajax>
 				<input type="text" name="name" value="John Sample" placeholder="John Sample">
 				<input type="text" name="age" placeholder="98">
 				<input type="submit"/>

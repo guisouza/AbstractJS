@@ -10,8 +10,11 @@
 		var result = '';
 		var tmplVars = tmpl.match(/\{\{.*\}\}/g);
 
-		x.core.ajax(URL,function(e){
+		x.core.ajax({
+			url : URL,
+			callback : function(e){
 
+			e = JSON.parse(e);
 			controller[collection] = e[root]; 
 
 			e[root].forEach(function(data,index){
@@ -25,7 +28,7 @@
 			element.innerHTML = result;
 
 			x.core.parse('events',element,controller);
-		});
+		}});
 		
 		function extractField(stringField,object){
 			var fieldPath = '';

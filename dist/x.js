@@ -61,11 +61,11 @@
 (function(x){
 	'use strict';
 	x.core.ajax = function(args){
-
+				console.log('executing ajax');
 				var callback = args.callback || function(){return false;};
 				var url = args.url;
-				var method = args.method;
-				var data = argumetns.data || false;
+				var method = args.method || 'GET';
+				var data = args.data || false;
 
 		        var xhr;
 		         
@@ -83,7 +83,7 @@
 		                    break;
 		                }
 		                catch(e){}
-		             } // end for
+		             }
 		        }
 		         
 		        xhr.onreadystatechange = ensureReadiness;
@@ -99,17 +99,15 @@
 		 
 		            // all is well  
 		            if(xhr.readyState === 4) {
-		                callback(JSON.parse(xhr.response));
+		                callback(xhr.response);
 		            }           
 		        }
 		         
 		        xhr.open(method, url, true);
 		        if (method.toUpperCase() == 'POST'){
-					xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-
-					//work with data
-
-					xmlhttp.send("fname=Henry&lname=Ford");
+					xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+					data = x.core.serialize(data);
+					xhr.send(data);
 		        }else{
 					xhr.send('');     	
 		        }
@@ -160,6 +158,22 @@
 
 })(this.x);
 
+//File : src/core/coreMethods/x.core.serialize.js
+
+(function(x){
+
+  'use strict';
+  x.core.serialize = function(data){
+  	var result = '';
+  	for(var field in data){
+  		result +=field+'='+data[field];
+  	}
+	data = encodeURI(data);
+	console.log(data);
+
+  };
+})(this.x);
+
 //File : src/core/parsers/x-ajax.js
 
 (function(x){
@@ -182,8 +196,19 @@
 
 			}
 
+			console.log(element.getAttribute('action'));
+
 			element.addEventListener('submit', function(e) {
 				e.preventDefault();
+				console.log('teste');
+				console.log(element.getAttribute('method'));
+				x.core.ajax({
+					method : element.getAttribute('method'),
+					url:element.getAttribute('action'),
+					callback:function(){
+						console.log('TODO : Simple ajax return ');
+					}
+				});
 			});
 
 		}else{
@@ -204,8 +229,11 @@
 		var result = '';
 		var tmplVars = tmpl.match(/\{\{.*\}\}/g);
 
-		x.core.ajax(URL,function(e){
+		x.core.ajax({
+			url : URL,
+			callback : function(e){
 
+			e = JSON.parse(e);
 			controller[collection] = e[root]; 
 
 			e[root].forEach(function(data,index){
@@ -219,7 +247,7 @@
 			element.innerHTML = result;
 
 			x.core.parse('events',element,controller);
-		});
+		}});
 		
 		function extractField(stringField,object){
 			var fieldPath = '';
