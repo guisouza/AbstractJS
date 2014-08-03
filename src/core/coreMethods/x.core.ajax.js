@@ -3,7 +3,6 @@
 (function(x){
 	'use strict';
 	x.core.ajax = function(args){
-				console.log('executing ajax');
 				var callback = args.callback || function(){return false;};
 				var url = args.url;
 				var method = args.method || 'GET';

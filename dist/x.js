@@ -61,7 +61,6 @@
 (function(x){
 	'use strict';
 	x.core.ajax = function(args){
-				console.log('executing ajax');
 				var callback = args.callback || function(){return false;};
 				var url = args.url;
 				var method = args.method || 'GET';
@@ -169,8 +168,6 @@
   		result +=field+'='+data[field];
   	}
 	data = encodeURI(data);
-	console.log(data);
-
   };
 })(this.x);
 
@@ -196,12 +193,8 @@
 
 			}
 
-			console.log(element.getAttribute('action'));
-
 			element.addEventListener('submit', function(e) {
 				e.preventDefault();
-				console.log('teste');
-				console.log(element.getAttribute('method'));
 				x.core.ajax({
 					method : element.getAttribute('method'),
 					url:element.getAttribute('action'),
