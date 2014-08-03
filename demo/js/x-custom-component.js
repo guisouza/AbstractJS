@@ -4,7 +4,7 @@
 (function(x){
 	'use strict';
 
-	x.core.addParser('x-dinossauro-roxo',function(element,controller){
+	x.core.addParser('x-custom-component',function(element,controller){
 
 	});
 
