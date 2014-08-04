@@ -1,4 +1,4 @@
-x.Controller('EmployeesController',[function(){
+x.Controller('EmployeesController',['MessagesService',function(MessagesService){
 
 	this.edit = function(param){
 		record = this.allEmployees[param]
@@ -6,7 +6,7 @@ x.Controller('EmployeesController',[function(){
 	}
 
 	this.alert = function(message){
-		alert(message);
+		MessagesService.alertar(message)
 	}
 
 }]);

@@ -23,7 +23,10 @@
         //Controller dont exists
         x.controllers[controllerName] = new x.Controller(controllerName,'API_CALL');
       }
-      arguments[1][arguments[1].length-1].call(x.controllers[controllerName]);
+
+
+      arguments[1][arguments[1].length-1].apply(x.controllers[controllerName],x.core.checkDependencies(arguments[1]));
+      // arguments[1][arguments[1].length-1].call(x.controllers[controllerName]);
       return x.controllers[controllerName];
     }
   };

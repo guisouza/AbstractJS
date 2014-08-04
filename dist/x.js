@@ -12,6 +12,9 @@
       controllers : {
 
       },
+      services : {
+
+      },
       core : {
         randomString : function(){
           return 'randomString';
@@ -116,6 +119,30 @@
 
 
 })(this.x);
+//File : src/core/coreMethods/x.core.checkDependencies.js
+
+(function(x){
+
+  'use strict';
+  x.core.checkDependencies = function(data){
+  	var rDependencies = [];
+  	for(var dependencie in data){
+  		if (dependencie < data.length-1){
+
+  			if (x.services[data[dependencie]]){
+
+  				rDependencies[dependencie] = x.services[data[dependencie]];
+  			}else{
+  				throw('Dependencie Not Fount =[');
+  			}
+  		}
+  	}
+
+  	return rDependencies;
+
+  };
+})(this.x);
+
 //File : src/core/coreMethods/x.core.parse.js
 
 (function(x){
@@ -333,9 +360,7 @@
 (function(x){
   'use strict';
 
-  x.Collection = function(){
-
-  };
+  x.Collection = function(){};
 
 })(this.x);
 //File : src/controller.js
@@ -363,7 +388,10 @@
         //Controller dont exists
         x.controllers[controllerName] = new x.Controller(controllerName,'API_CALL');
       }
-      arguments[1][arguments[1].length-1].call(x.controllers[controllerName]);
+
+
+      arguments[1][arguments[1].length-1].apply(x.controllers[controllerName],x.core.checkDependencies(arguments[1]));
+      // arguments[1][arguments[1].length-1].call(x.controllers[controllerName]);
       return x.controllers[controllerName];
     }
   };
@@ -455,6 +483,17 @@
         return editData(record);
       }
     };
+  };
+
+})(this.x);
+//File : src/controller.js
+
+(function(x){
+  'use strict';
+
+  x.Service = function(){
+
+		x.services[arguments[0]] = new arguments[1][arguments[1].length-1]();
   };
 
 })(this.x);

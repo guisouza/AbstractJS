@@ -12,6 +12,9 @@
       controllers : {
 
       },
+      services : {
+
+      },
       core : {
         randomString : function(){
           return 'randomString';

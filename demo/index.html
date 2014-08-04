@@ -7,7 +7,7 @@
 	<body>
 
 	<div x-controller="EmployeesController">
-		<form method="POST" action="http://localhost:8080/x/teste" x-ajax>
+		<form method="POST" action="http://localhost:8080/x/teste" x-model="employee" x-ajax>
 				<input type="text" name="name" value="John Sample" placeholder="John Sample">
 				<input type="text" name="age" placeholder="98">
 				<input type="submit"/>
@@ -38,6 +38,7 @@
 	</div>
 
 		<script type="text/javascript" src="../dist/x.min.js"></script>
+		<script type="text/javascript" src="js/Services/messagesService.js"></script>
 		<script type="text/javascript" src="js/Controllers/EmployeesController.js"></script>
 		<script type="text/javascript" src="js/x-custom-component.js"></script>
 	</body>

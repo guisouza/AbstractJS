@@ -3,8 +3,6 @@
 (function(x){
   'use strict';
 
-  x.Collection = function(){
-
-  };
+  x.Collection = function(){};
 
 })(this.x);
