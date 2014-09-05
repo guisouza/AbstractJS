@@ -17,23 +17,24 @@
         addPlaceholder : function(field,place){
           
           if (!this.placeholders)
-            this.placeholders = [];
+            this.placeholders = {};
           if (!this.placeholders[field])
             this.placeholders[field] = [];
 
           this.placeholders[field].push(place);
-          console.log(this.placeholders);
         },
 
         getPlaceholders : function(index){
-          console.log(this.placeholders);
           return this.placeholders[index];
         },
 
         watch : function(field,callback){
+          if (!this.watchers)
+            this.watchers = {};
+          if (!this.watchers[field])
+            this.watchers[field] = [];
 
-          console.log(field);
-          console.log(callback);
+          this.watchers[field].push(callback);
 
         },
         xApply : function(action,params){
@@ -44,11 +45,14 @@
 
           if (changes !== null){
             changes.forEach(function(changed,repI){
+
               changed = changed.replace(/(\s?=)|(this\.)|(this\[)/,'').replace(/\s?=/,'').replace(/\'\]/,'').replace("'",'');
 
-              var links =  this.getPlaceholders['{{'+changed+'}}'];
-              console.log(this.getPlaceholders['{{'+changed+'}}']);
+              for (var watcher in this.watchers[changed]){
+                this.watchers[changed][watcher]();
+              }
 
+              var links =  this.getPlaceholders('{{'+changed+'}}');
               for (var link in links){
                 if (links[link].originalFields['{{'+changed+'}}'] != this[changed]){
                   links[link].textContent = links[link].originalText;

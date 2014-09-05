@@ -7,10 +7,13 @@ var z ;
 	x.core.addParser('x-repeat',function(element,controller){
 		var statement = element.getAttribute('x-repeat').trim().split('in');
 		var data = statement[1].trim();
-		controller.watch(data,function(){
-			console.log('mudei ! =D ');
-		});
-		console.log(element.innerHTML);
+		var template = element.innerHTML;
+		var iterations = controller[data].length;
 
+		x.core.repeatIterator(statement,data,template,element,controller);
+
+		controller.watch(data,function(){
+			x.core.repeatIterator(statement,data,template,element,controller);
+		});
 	});
 })(this.x);

@@ -8,10 +8,8 @@
 		if (x.controllers[controllerName] === undefined){
 			x.controllers[controllerName] = new x.Controller(controllerName,htmlElement);
 		}
-
 		x.core.mapper.map(htmlElement,x.controllers[controllerName]);
-
-
+		
 		return x.controllers[controllerName];
 	};
 

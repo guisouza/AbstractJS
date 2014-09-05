@@ -36,10 +36,8 @@
 		if (x.controllers[controllerName] === undefined){
 			x.controllers[controllerName] = new x.Controller(controllerName,htmlElement);
 		}
-
 		x.core.mapper.map(htmlElement,x.controllers[controllerName]);
-
-
+		
 		return x.controllers[controllerName];
 	};
 
@@ -201,7 +199,6 @@
 
 		function define(DOM,Controller){
 			var placeholders = DOM.match(/{{[^}]+}}/g);
-
 			return{
 				fields : placeholders,
 				DOM : DOM
@@ -209,14 +206,14 @@
 		}
 
 		function iterate(htmlElement,Controller){
-			if(htmlElement.getAttribute && htmlElement.getAttribute('x-repeat') === null){
+			if(htmlElement.getAttribute && (htmlElement.hasAttribute('x-repeat') === false ) && (htmlElement.hasAttribute('x-content') === false)){
 				for(var obj in htmlElement.childNodes){
 					if (!isNaN(obj = parseInt(obj))){
 						obj = htmlElement.childNodes[obj];
 						interact(obj,Controller);
 					}
 				}
-			}
+      }
 		}
 
 		function interact(obj,Controller){
@@ -232,13 +229,9 @@
 		}
 
 		return {
-
 			map : function(htmlElement,Controller){
-
 				iterate(htmlElement,Controller);
-
 			}
-
 		};
 	})(x);
 }(this.x));
@@ -298,6 +291,20 @@
 
 })(this.x);
 
+//File : src/core/coreMethods/x.core.repeatIterator.js
+
+(function(x){
+	'use strict';
+	x.core.repeatIterator = function(args){
+
+
+
+
+
+	};
+
+
+})(this.x);
 //File : src/core/coreMethods/x.core.serialize.js
 
 (function(x){
@@ -462,11 +469,14 @@ var z ;
 	x.core.addParser('x-repeat',function(element,controller){
 		var statement = element.getAttribute('x-repeat').trim().split('in');
 		var data = statement[1].trim();
-		controller.watch(data,function(){
-			console.log('mudei ! =D ');
-		});
-		console.log(element.innerHTML);
+		var template = element.innerHTML;
+		var iterations = controller[data].length;
 
+		x.core.repeatIterator(statement,data,template,element,controller);
+
+		controller.watch(data,function(){
+			x.core.repeatIterator(statement,data,template,element,controller);
+		});
 	});
 })(this.x);
 
@@ -497,23 +507,24 @@ var z ;
         addPlaceholder : function(field,place){
           
           if (!this.placeholders)
-            this.placeholders = [];
+            this.placeholders = {};
           if (!this.placeholders[field])
             this.placeholders[field] = [];
 
           this.placeholders[field].push(place);
-          console.log(this.placeholders);
         },
 
         getPlaceholders : function(index){
-          console.log(this.placeholders);
           return this.placeholders[index];
         },
 
         watch : function(field,callback){
+          if (!this.watchers)
+            this.watchers = {};
+          if (!this.watchers[field])
+            this.watchers[field] = [];
 
-          console.log(field);
-          console.log(callback);
+          this.watchers[field].push(callback);
 
         },
         xApply : function(action,params){
@@ -524,11 +535,14 @@ var z ;
 
           if (changes !== null){
             changes.forEach(function(changed,repI){
+
               changed = changed.replace(/(\s?=)|(this\.)|(this\[)/,'').replace(/\s?=/,'').replace(/\'\]/,'').replace("'",'');
 
-              var links =  this.getPlaceholders['{{'+changed+'}}'];
-              console.log(this.getPlaceholders['{{'+changed+'}}']);
+              for (var watcher in this.watchers[changed]){
+                this.watchers[changed][watcher]();
+              }
 
+              var links =  this.getPlaceholders('{{'+changed+'}}');
               for (var link in links){
                 if (links[link].originalFields['{{'+changed+'}}'] != this[changed]){
                   links[link].textContent = links[link].originalText;

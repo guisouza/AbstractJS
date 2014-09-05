@@ -21,7 +21,6 @@
 
 		function define(DOM,Controller){
 			var placeholders = DOM.match(/{{[^}]+}}/g);
-
 			return{
 				fields : placeholders,
 				DOM : DOM
@@ -29,14 +28,14 @@
 		}
 
 		function iterate(htmlElement,Controller){
-			if(htmlElement.getAttribute && htmlElement.getAttribute('x-repeat') === null){
+			if(htmlElement.getAttribute && (htmlElement.hasAttribute('x-repeat') === false ) && (htmlElement.hasAttribute('x-content') === false)){
 				for(var obj in htmlElement.childNodes){
 					if (!isNaN(obj = parseInt(obj))){
 						obj = htmlElement.childNodes[obj];
 						interact(obj,Controller);
 					}
 				}
-			}
+      }
 		}
 
 		function interact(obj,Controller){
@@ -52,13 +51,9 @@
 		}
 
 		return {
-
 			map : function(htmlElement,Controller){
-
 				iterate(htmlElement,Controller);
-
 			}
-
 		};
 	})(x);
 }(this.x));
