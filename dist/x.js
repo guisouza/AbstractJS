@@ -178,6 +178,70 @@
 		}
 	};
 }(this.x));
+//File : src/core/coreMethods/x.core.mapper.js
+
+(function(x){
+	'use strict';
+	x.core.mapper = (function(stringField,object){
+
+		function checkTextNode(obj){
+			if (obj.nodeType === 3 && obj.textContent.match(/\{\{.*\}\}/g)){
+				return true;
+			}
+		}
+
+		function extractFields(placeholders,Controller,obj){
+			var fields = {};
+			for (var field in placeholders){
+				Controller.addPlaceholder([placeholders[field]],obj);
+				fields[placeholders[field]] = x.core.extractField(placeholders[field],Controller);
+			}
+			return fields;
+		}
+
+		function define(DOM,Controller){
+			var placeholders = DOM.match(/{{[^}]+}}/g);
+
+			return{
+				fields : placeholders,
+				DOM : DOM
+			};
+		}
+
+		function iterate(htmlElement,Controller){
+			if(htmlElement.getAttribute && htmlElement.getAttribute('x-repeat') === null){
+				for(var obj in htmlElement.childNodes){
+					if (!isNaN(obj = parseInt(obj))){
+						obj = htmlElement.childNodes[obj];
+						interact(obj,Controller);
+					}
+				}
+			}
+		}
+
+		function interact(obj,Controller){
+			if (checkTextNode(obj)){
+				obj.originalText = obj.wholeText;
+				var placeholders = define(obj.originalText,Controller);
+				placeholders.fields = extractFields(placeholders.fields,Controller,obj);
+				obj.originalFields = placeholders.fields;
+				obj.textContent = x.core.render(obj,placeholders.fields);
+			}else{
+				iterate(obj,Controller);
+			}
+		}
+
+		return {
+
+			map : function(htmlElement,Controller){
+
+				iterate(htmlElement,Controller);
+
+			}
+
+		};
+	})(x);
+}(this.x));
 //File : src/core/coreMethods/x.core.parse.js
 
 (function(x){
@@ -298,6 +362,9 @@
 		var result = '';
 		var tmplVars = tmpl.match(/\{\{.*\}\}/g);
 
+
+		
+		
 		x.core.ajax({
 			url : URL,
 			callback : function(e){
@@ -386,6 +453,22 @@
 
 
 })(this.x);
+//File : src/core/parsers/x-ajax.js
+
+var z ;
+
+(function(x){
+	'use strict';
+	x.core.addParser('x-repeat',function(element,controller){
+		var statement = element.getAttribute('x-repeat').trim().split('in');
+		var data = statement[1].trim();
+		controller.watch(data,function(){
+			console.log('mudei ! =D ');
+		});
+		console.log(element.innerHTML);
+
+	});
+})(this.x);
 
 //File : src/controller.js
 
@@ -407,8 +490,32 @@
 
       this.htmlElement = htmlElement;
       this.controllerName = controllerName;
-
+      this.watchers = [];
+      this.placeholders = [];
       return {
+
+        addPlaceholder : function(field,place){
+          
+          if (!this.placeholders)
+            this.placeholders = [];
+          if (!this.placeholders[field])
+            this.placeholders[field] = [];
+
+          this.placeholders[field].push(place);
+          console.log(this.placeholders);
+        },
+
+        getPlaceholders : function(index){
+          console.log(this.placeholders);
+          return this.placeholders[index];
+        },
+
+        watch : function(field,callback){
+
+          console.log(field);
+          console.log(callback);
+
+        },
         xApply : function(action,params){
 
           action.apply(this,params);
@@ -419,7 +526,8 @@
             changes.forEach(function(changed,repI){
               changed = changed.replace(/(\s?=)|(this\.)|(this\[)/,'').replace(/\s?=/,'').replace(/\'\]/,'').replace("'",'');
 
-              var links =  this.placeholders['{{'+changed+'}}'];
+              var links =  this.getPlaceholders['{{'+changed+'}}'];
+              console.log(this.getPlaceholders['{{'+changed+'}}']);
 
               for (var link in links){
                 if (links[link].originalFields['{{'+changed+'}}'] != this[changed]){
@@ -547,76 +655,6 @@
   };
 
 })(this.x);
-//File : src/core/coreMethods/x.core.extractField.js
-
-(function(x){
-	'use strict';
-	x.core.mapper = (function(stringField,object){
-
-		function checkTextNode(obj){
-			if (obj.nodeType === 3 && obj.textContent.match(/\{\{.*\}\}/g)){
-				return true;
-			}
-		}
-
-		function extractFields(placeholders,Controller,obj){
-			var fields = {};
-			for (var field in placeholders){
-        if (!Controller.placeholders[placeholders[field]]){
-          Controller.placeholders[placeholders[field]] = [];
-        }
-        Controller.placeholders[placeholders[field]].push(obj);
-				fields[placeholders[field]] = x.core.extractField(placeholders[field],Controller);
-			}
-			return fields;
-		}
-
-		function define(DOM,Controller){
-			var placeholders = DOM.match(/{{[^}]+}}/g);
-
-			return{
-				fields : placeholders,
-				DOM : DOM
-			};
-		}
-
-    function iterate(htmlElement,Controller){
-      if (!Controller.placeholders){
-        Controller.placeholders = [];
-      }
-        if(htmlElement.getAttribute && htmlElement.getAttribute('x-content') === null){
-        for(var obj in htmlElement.childNodes){
-          if (!isNaN(obj = parseInt(obj))){
-            obj = htmlElement.childNodes[obj];
-            interact(obj,Controller);
-          }
-        }
-      }
-    }
-
-    function interact(obj,Controller){
-      if (checkTextNode(obj)){
-        obj.originalText = obj.wholeText;
-        var placeholders = define(obj.originalText,Controller);
-        placeholders.fields = extractFields(placeholders.fields,Controller,obj);
-        obj.originalFields = placeholders.fields;
-        obj.textContent = x.core.render(obj,placeholders.fields);
-      }else{
-        iterate(obj,Controller);
-      }
-    }
-
-		return {
-
-			map : function(htmlElement,Controller){
-
-        iterate(htmlElement,Controller);
-
-			}
-
-		};
-	})(x);
-}(this.x));
 //File : src/methods/x.init.js
 
 (function(x,world){

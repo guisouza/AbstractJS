@@ -19,7 +19,32 @@
 		{{teste2}}<br>
 		{{teste1}}
 
-		<p>{{teste2}}</p>
+		{{teste1}}{{teste2}}
+
+		{{teste2}}<br>
+		{{teste1}}		{{teste1}}{{teste2}}
+
+		{{teste2}}<br>
+		{{teste1}}
+
+		{{teste1}}{{teste2}}
+
+		{{teste2}}<br>
+		{{teste1}}		{{teste1}}{{teste2}}
+
+		{{teste2}}<br>
+		{{teste1}}
+
+		{{teste1}}{{teste2}}
+
+		{{teste2}}<br>
+		{{teste1}}		{{teste1}}{{teste2}}
+
+		{{teste2}}<br>
+		{{teste1}}
+
+		{{teste1}}{{teste2}}
+
 		<form method="POST" action="http://localhost:8080/x/teste" x-model="employee" x-ajax>
 				<input type="text" name="name" value="John Sample" placeholder="John Sample">
 				<input type="text" name="age" placeholder="98">
@@ -35,7 +60,28 @@
 					<th>Area</th>
 				</tr>
 			</thead>
-			<tbody >
+			<tbody x-content="data.json" x-model="employee" x-collection="allEmployees">
+				<tr>
+					<td>{{name}}</td>
+					<td>{{age}}</td>
+					<td>{{company.name}}</td>
+					<td>{{company.area.name}}</td>
+					<td><button x-click="edit({{id}})">Edit</button></td>
+				</tr>
+			</tbody>
+		</table>
+
+
+		<table border="1">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Age</th>
+					<th>Company</th>
+					<th>Area</th>
+				</tr>
+			</thead>
+			<tbody x-repeat="employee in employees">
 				<tr>
 					<td>{{name}}</td>
 					<td>{{age}}</td>

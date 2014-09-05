@@ -10,8 +10,32 @@
 
       this.htmlElement = htmlElement;
       this.controllerName = controllerName;
-
+      this.watchers = [];
+      this.placeholders = [];
       return {
+
+        addPlaceholder : function(field,place){
+          
+          if (!this.placeholders)
+            this.placeholders = [];
+          if (!this.placeholders[field])
+            this.placeholders[field] = [];
+
+          this.placeholders[field].push(place);
+          console.log(this.placeholders);
+        },
+
+        getPlaceholders : function(index){
+          console.log(this.placeholders);
+          return this.placeholders[index];
+        },
+
+        watch : function(field,callback){
+
+          console.log(field);
+          console.log(callback);
+
+        },
         xApply : function(action,params){
 
           action.apply(this,params);
@@ -22,7 +46,8 @@
             changes.forEach(function(changed,repI){
               changed = changed.replace(/(\s?=)|(this\.)|(this\[)/,'').replace(/\s?=/,'').replace(/\'\]/,'').replace("'",'');
 
-              var links =  this.placeholders['{{'+changed+'}}'];
+              var links =  this.getPlaceholders['{{'+changed+'}}'];
+              console.log(this.getPlaceholders['{{'+changed+'}}']);
 
               for (var link in links){
                 if (links[link].originalFields['{{'+changed+'}}'] != this[changed]){
