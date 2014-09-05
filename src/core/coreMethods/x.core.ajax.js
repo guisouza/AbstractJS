@@ -26,24 +26,19 @@
 		                catch(e){}
 		             }
 		        }
-		         
 		        xhr.onreadystatechange = ensureReadiness;
-		         
 		        function ensureReadiness() {
 		            if(xhr.readyState < 4) {
 		                return;
 		            }
-		             
 		            if(xhr.status !== 200) {
 		                return;
 		            }
-		 
-		            // all is well  
 		            if(xhr.readyState === 4) {
 		                callback(xhr.response);
 		            }           
 		        }
-		         
+
 		        xhr.open(method, url, true);
 		        if (method.toUpperCase() == 'POST'){
 					xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
@@ -52,8 +47,6 @@
 		        }else{
 					xhr.send('');     	
 		        }
-
-
 	};
 
 

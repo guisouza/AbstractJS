@@ -5,8 +5,13 @@ x.Controller('EmployeesController',['MessagesService',function(MessagesService){
 		this.employee.edit(record);
 	}
 
+
 	this.alert = function(message){
-		MessagesService.alertar(message)
+		this.teste1 = new Date();
+		this.teste2 = 'alterei2';
 	}
+
+	this.teste1 = new Date();
+	this.teste2 = 'nome2';
 
 }]);

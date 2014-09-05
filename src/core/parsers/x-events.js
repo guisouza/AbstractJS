@@ -22,8 +22,7 @@
 
     action = action.match(/.*\(/g)[0].replace('(','');
       element.addEventListener('click',function(){
-        console.log(controller);
-        controller[action].apply(controller,params);
+        controller.xApply(controller[action],params);
       });
 
     });
@@ -47,7 +46,6 @@
 
     action = action.match(/.*\(/g)[0].replace('(','');
       element.addEventListener('mouseover',function(){
-        console.log(controller);
         controller[action].apply(controller,params);
       });
 

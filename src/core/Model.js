@@ -46,7 +46,6 @@
     };
 
     var applyValues = function(propertie,value){
-
       htmlElements.forEach(function(element){
         element.querySelectorAll('[name="'+propertie+'"]').forEach(function(a,b){
           a.value = value;
@@ -55,15 +54,11 @@
 
     };
 
-    var  structByDom = function(){
+    var structByDom = function(){
       absorveData(getInputs(),data);
       return Model;
     };
 
-    var editData = function(record){
-      broadcast(record);
-      return record;
-    };
 
     structByDom();
 
@@ -81,7 +76,8 @@
         return result;
       },
       edit : function(record){
-        return editData(record);
+        broadcast(record);
+        return record;
       }
     };
   };

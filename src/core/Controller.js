@@ -12,6 +12,28 @@
       this.controllerName = controllerName;
 
       return {
+        xApply : function(action,params){
+
+          action.apply(this,params);
+
+          var changes = action.toString().match(/this..+?\s*=/g);
+
+          if (changes !== null){
+            changes.forEach(function(changed,repI){
+              changed = changed.replace(/(\s?=)|(this\.)|(this\[)/,'').replace(/\s?=/,'').replace(/\'\]/,'').replace("'",'');
+
+              var links =  this.placeholders['{{'+changed+'}}'];
+
+              for (var link in links){
+                if (links[link].originalFields['{{'+changed+'}}'] != this[changed]){
+                  links[link].textContent = links[link].originalText;
+                  links[link].originalFields['{{'+changed+'}}'] = this[changed];
+                  links[link].textContent = x.core.render(links[link],links[link].originalFields);
+                }
+              }
+            }.bind(this));
+          }
+        },
         appendModel : function(model){
           this[model.getModelName()] = model; 
         }
@@ -20,7 +42,7 @@
     }else{
 
       if (x.controllers[controllerName] === undefined){
-        //Controller dont exists
+        //Controller DO NOT exists
         x.controllers[controllerName] = new x.Controller(controllerName,'API_CALL');
       }
 
