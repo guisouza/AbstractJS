@@ -1,0 +1,16 @@
+{
+	"data":[
+
+	{
+		"id":"0",
+		"name" : "John",
+		"age": "21",
+		"company" : {
+			"name": "Google",
+			"area" : {
+				"name" : "Technology"
+			}
+		}
+	}]
+
+}
