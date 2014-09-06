@@ -1,7 +1,5 @@
 //File : src/core/parsers/x-ajax.js
 
-var z ;
-
 (function(x){
 	'use strict';
 	x.core.addParser('x-repeat',function(element,controller){

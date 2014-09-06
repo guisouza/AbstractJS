@@ -35,7 +35,9 @@
 		                return;
 		            }
 		            if(xhr.readyState === 4) {
-		                callback(xhr.response);
+		                for (var controller in x.controllers){
+		                	x.controllers[controller].xApply(callback,[xhr.response]);
+		                }
 		            }           
 		        }
 

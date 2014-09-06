@@ -20,6 +20,7 @@
 		}
 
 		function define(DOM,Controller){
+      
 			var placeholders = DOM.match(/{{[^}]+}}/g);
 			return{
 				fields : placeholders,

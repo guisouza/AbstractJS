@@ -2,8 +2,9 @@
 
 (function(x){
 	'use strict';
-	x.core.extractField = function(stringField,object){
+	x.core.extractField = function(stringField,object,index){
 		stringField = stringField.replace(/\}\}/g,'').replace(/\{\{/g,'').trim();
+
 		if (object){
 			var fieldPath = '';
 			if (stringField.indexOf('.') > 0){

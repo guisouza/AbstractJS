@@ -1,20 +1,29 @@
 x.Controller('EmployeesController',['MessagesService',function(MessagesService){
 
 	this.edit = function(param){
-		record = this.allEmployees[param]
+    // this.x = y;
+		record = this.allEmployees[param];
 		this.employee.edit(record);
+    this.funcionarios.splice(param,1);
+    this.teste = 8;
+    
 	}
 
 	this.testeee = 1;
 
-	this.alert = function(message){
 
-		this.teste1 = function(){return this.testeee++}.bind(this);
-		this.teste2 = 'alterei2';
-		this.employees = this.employees.splice(1,1);
+
+	this.alert = function(message){
+    x.core.ajax({
+      url:'data1.json',
+      callback:function(e){
+        this.funcionarios = JSON.parse(e).data;
+      }
+    })
+
 	}
 
-	this.employees = [
+	this.funcionarios = [
 
 				{
 					"id":"0",
@@ -64,13 +73,6 @@ x.Controller('EmployeesController',['MessagesService',function(MessagesService){
 					}
 				}]
 
-
-	x.core.ajax({
-		url:'data.json',
-		callback:function(){
-			console.log('data Loaded');
-		}
-	})
 
 	this.teste1 = new Date();
 	this.teste2 = 'nome2';

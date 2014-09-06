@@ -11,8 +11,8 @@
 		var tmplVars = tmpl.match(/\{\{.*\}\}/g);
 
 
-		
-		
+
+
 		x.core.ajax({
 			url : URL,
 			callback : function(e){

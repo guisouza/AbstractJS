@@ -41,12 +41,12 @@
 
           action.apply(this,params);
 
-          var changes = action.toString().match(/this..+?\s*=/g);
+          var changes = action.toString().match(/(this..+?\s*=)|(this..+?\s*.splice)|(this..+?\s*.split)/g);
 
           if (changes !== null){
             changes.forEach(function(changed,repI){
 
-              changed = changed.replace(/(\s?=)|(this\.)|(this\[)/,'').replace(/\s?=/,'').replace(/\'\]/,'').replace("'",'');
+              changed = changed.replace(/(\s?=)|(this\.)|(this\[)/,'').replace(/\s?=/,'').replace(/\'\]/,'').replace("'",'').replace(/\.split/,'').replace(/\.splice/,'');
 
               for (var watcher in this.watchers[changed]){
                 this.watchers[changed][watcher]();

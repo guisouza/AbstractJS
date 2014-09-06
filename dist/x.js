@@ -98,7 +98,9 @@
 		                return;
 		            }
 		            if(xhr.readyState === 4) {
-		                callback(xhr.response);
+		                for (var controller in x.controllers){
+		                	x.controllers[controller].xApply(callback,[xhr.response]);
+		                }
 		            }           
 		        }
 
@@ -158,8 +160,9 @@
 
 (function(x){
 	'use strict';
-	x.core.extractField = function(stringField,object){
+	x.core.extractField = function(stringField,object,index){
 		stringField = stringField.replace(/\}\}/g,'').replace(/\{\{/g,'').trim();
+
 		if (object){
 			var fieldPath = '';
 			if (stringField.indexOf('.') > 0){
@@ -198,6 +201,7 @@
 		}
 
 		function define(DOM,Controller){
+      
 			var placeholders = DOM.match(/{{[^}]+}}/g);
 			return{
 				fields : placeholders,
@@ -295,12 +299,25 @@
 
 (function(x){
 	'use strict';
-	x.core.repeatIterator = function(args){
+	x.core.repeatIterator = function(statement,data,template,element,controller){
 
+    var tmplVars = template.match(/\{\{.*\}\}/g);
+    var result = '';
 
+    controller[data].forEach(function(data,index){
+      var iteration = template;
+      data.$ = index;
+      for(var field in tmplVars){
+        var tmplVar = tmplVars[field].replace(/}}|{{/g,'');
+        iteration = iteration.replace(tmplVars[field],x.core.extractField(tmplVar,data));
+      }
 
+      result = result+iteration;
+    });
 
+    element.innerHTML = result;
 
+    x.core.parse('events',element,controller);
 	};
 
 
@@ -370,8 +387,8 @@
 		var tmplVars = tmpl.match(/\{\{.*\}\}/g);
 
 
-		
-		
+
+
 		x.core.ajax({
 			url : URL,
 			callback : function(e){
@@ -462,8 +479,6 @@
 })(this.x);
 //File : src/core/parsers/x-ajax.js
 
-var z ;
-
 (function(x){
 	'use strict';
 	x.core.addParser('x-repeat',function(element,controller){
@@ -481,13 +496,14 @@ var z ;
 })(this.x);
 
 //File : src/controller.js
-
+   
 (function(x){
   'use strict';
 
   x.Collection = function(){};
 
 })(this.x);
+
 //File : src/controller.js
 
 (function(x){
@@ -531,12 +547,12 @@ var z ;
 
           action.apply(this,params);
 
-          var changes = action.toString().match(/this..+?\s*=/g);
+          var changes = action.toString().match(/(this..+?\s*=)|(this..+?\s*.splice)|(this..+?\s*.split)/g);
 
           if (changes !== null){
             changes.forEach(function(changed,repI){
 
-              changed = changed.replace(/(\s?=)|(this\.)|(this\[)/,'').replace(/\s?=/,'').replace(/\'\]/,'').replace("'",'');
+              changed = changed.replace(/(\s?=)|(this\.)|(this\[)/,'').replace(/\s?=/,'').replace(/\'\]/,'').replace("'",'').replace(/\.split/,'').replace(/\.splice/,'');
 
               for (var watcher in this.watchers[changed]){
                 this.watchers[changed][watcher]();
