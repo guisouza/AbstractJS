@@ -41,7 +41,7 @@
 					<td>{{age}}</td>
 					<td>{{company.name}}</td>
 					<td>{{company.area.name}}</td>
-					<td>{{$}}</td>
+					<td>{{$index}}</td>
 					<td><button x-click="edit({{id}})">Edit</button></td>
 				</tr>
 			</tbody>
@@ -63,8 +63,8 @@
 					<td>{{age}}</td>
 					<td>{{company.name}}</td>
 					<td>{{company.area.name}}</td>
-					<td>{{$}}</td>
-					<td><button x-click="edit({{$}})">Edit</button></td>
+					<td>{{$index}}</td>
+					<td><button x-click="edit({{$index}})">Edit</button></td>
 				</tr>
 			</tbody>
 		</table>
