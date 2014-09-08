@@ -22,6 +22,7 @@
 
 				e[root].forEach(function(data,index){
 					var iteration = tmpl;
+					data.$index = index;
 					for(var field in tmplVars){
 						var tmplVar = tmplVars[field].replace(/}}|{{/g,'');
 						iteration = iteration.replace(tmplVars[field],x.core.extractField(tmplVar,data));
