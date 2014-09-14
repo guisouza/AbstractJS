@@ -11,42 +11,6 @@
 				"name" : "Technology"
 			}
 		}
-	},
-
-	{
-		"id":"32",
-		"name" : "Mark",
-		"age": "22",
-		"company" : {
-			"name": "Facebook",
-			"area" : {
-				"name" : "Technology"
-			}
-		}
-	},
-
-	{
-		"id":"34",
-		"name" : "Garry",
-		"age": "23",
-		"company" : {
-			"name": "Instagram",
-			"area" : {
-				"name" : "Technology"
-			}
-		}
-	},
-
-	{
-		"id":"133",
-		"name" : "Silverster Stalone",
-		"age": "24",
-		"company" : {
-			"name": "Picasa",
-			"area" : {
-				"name" : "Technology"
-			}
-		}
 	}]
 
 }

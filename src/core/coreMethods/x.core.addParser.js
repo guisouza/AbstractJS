@@ -1,5 +1,9 @@
 //File : src/core/coreMethods/x.core.addParser.js
-
+/**
+ * Add a new DOM parser
+ * @param      {String}   parserName
+ * @param      {Function}   modifier function
+ */
 (function(x){
 	'use strict';
 

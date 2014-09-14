@@ -1,5 +1,5 @@
 describe('Testing X Controller', function () {
-	it('API - should create the controller', function() {
+	it('JSAPI - should create the controller', function() {
 
 		var c = x.Controller('TestController',[function(){
 			this.teste = function(a){
@@ -26,7 +26,7 @@ describe('Testing X Controller', function () {
 	});
 
 
-	it('DOM after API - should create the controller', function() {
+	it('DOM after JSAPI - should create the controller', function() {
 
 		x.controllers = {};
 

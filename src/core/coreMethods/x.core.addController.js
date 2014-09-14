@@ -1,5 +1,9 @@
 //File : src/core/coreMethods/x.core.addController.js
-
+/**
+ * Instantiate a new Controller in the application
+ * @param      {String}   ControllerName
+ * @param      {HTMLElement}   htmlElement
+ */
 (function(x){
 	'use strict';
 

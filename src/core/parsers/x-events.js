@@ -1,55 +1,59 @@
 //File : src/core/parsers/x-events.js
 
 (function(x){
-  'use strict';
+'use strict';
 
-  x.core.addParser('events.x-click',function(element,controller){
+x.core.addParser('events.x-click',function(element,controller){
 
-    var action = element.getAttribute('x-click');
-    var params = action.match(/\(.*\)/g)[0].replace('(','').replace(')','').split(',');
-    for(var param in params){
+  var action = element.getAttribute('x-click');
+  var params = action.match(/\(.*\)/g)[0].replace('(','').replace(')','').split(',');
+  for(var param in params){
 
-      if (params[param].indexOf('function') != -1){
-      }else{
-        if (params[param][0] != "'" && params[param][0] != '"' && params[param][0] != '['){
-          params[param] = parseInt(params[param]);
-        }else if (params[param][0] == "'" || params[param][0] == '"'){
+    if (params[param].indexOf('function') != -1){
+    }else{
+      if (params[param][0] != "'" && params[param][0] != '"' && params[param][0] != '['){
+        params[param] = parseInt(params[param]);
+      }else if (params[param][0] == "'" || params[param][0] == '"'){
 
-          params[param] = params[param].replace('"','').replace("'",'').replace('"','').replace("'",'').replace('"','').replace("'",'');
-        }
+        params[param] = params[param].replace('"','').replace("'",'').replace('"','').replace("'",'').replace('"','').replace("'",'');
       }
     }
+  }
 
-    action = action.match(/.*\(/g)[0].replace('(','');
-      element.addEventListener('click',function(){
-        controller.xApply(controller[action],params);
-      });
+  action = action.match(/.*\(/g)[0].replace('(','');
 
+    if (!controller[action]){
+      throw('Method '+action+ ' not found =[');
+    }
+    element.addEventListener('click',function(){
+      controller.xApply(controller[action],params);
     });
 
-  x.core.addParser('events.x-mouseover',function(element,controller){
+  });
 
-    var action = element.getAttribute('x-mouseover');
-    var params = action.match(/\(.*\)/g)[0].replace('(','').replace(')','').split(',');
-    for(var param in params){
+x.core.addParser('events.x-mouseover',function(element,controller){
 
-      if (params[param].indexOf('function') != -1){
-      }else{
-        if (params[param][0] != "'" && params[param][0] != '"' && params[param][0] != '['){
-          params[param] = parseInt(params[param]);
-        }else if (params[param][0] == "'" || params[param][0] == '"'){
+  var action = element.getAttribute('x-mouseover');
+  var params = action.match(/\(.*\)/g)[0].replace('(','').replace(')','').split(',');
+  for(var param in params){
 
-          params[param] = params[param].replace('"','').replace("'",'').replace('"','').replace("'",'').replace('"','').replace("'",'');
-        }
+    if (params[param].indexOf('function') != -1){
+    }else{
+      if (params[param][0] != "'" && params[param][0] != '"' && params[param][0] != '['){
+        params[param] = parseInt(params[param]);
+      }else if (params[param][0] == "'" || params[param][0] == '"'){
+
+        params[param] = params[param].replace('"','').replace("'",'').replace('"','').replace("'",'').replace('"','').replace("'",'');
       }
     }
+  }
 
-    action = action.match(/.*\(/g)[0].replace('(','');
-      element.addEventListener('mouseover',function(){
-        controller[action].apply(controller,params);
-      });
+  action = action.match(/.*\(/g)[0].replace('(','');
+    element.addEventListener('mouseover',function(){
+      controller[action].apply(controller,params);
+    });
 
-  });
+});
 
 
 })(this.x);

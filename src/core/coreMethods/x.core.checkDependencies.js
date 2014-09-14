@@ -2,22 +2,22 @@
 
 (function(x){
 
-  'use strict';
-  x.core.checkDependencies = function(data){
-  	var rDependencies = [];
-  	for(var dependencie in data){
-  		if (dependencie < data.length-1){
-
-  			if (x.services[data[dependencie]]){
-
-  				rDependencies[dependencie] = x.services[data[dependencie]];
-  			}else{
-  				throw('Dependencie Not Fount =[');
-  			}
-  		}
-  	}
-
-  	return rDependencies;
-
-  };
+'use strict';
+/**
+ * Check and load Controller dependencies
+ * @param      {Array}   dependenciesNames
+ */
+x.core.checkDependencies = function(dependencies){
+	var rDependencies = [];
+	for(var dependencie in dependencies){
+		if (dependencie < dependencies.length-1){
+			if (x.services[dependencies[dependencie]]){
+				rDependencies[dependencie] = x.services[dependencies[dependencie]];
+			}else{
+				throw(dependencies[dependencie]+' Dependencie Not Fount =[');
+			}
+		}
+	}
+	return rDependencies;
+};
 })(this.x);

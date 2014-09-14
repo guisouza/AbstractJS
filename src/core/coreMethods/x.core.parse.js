@@ -3,6 +3,7 @@
 (function(x){
 
   'use strict';
+  
   x.core.parse = function(){
 
     if(typeof arguments[0] == 'string'){

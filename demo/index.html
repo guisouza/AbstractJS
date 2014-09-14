@@ -11,21 +11,8 @@
 				<input type="text" name="name" value="John Sample" placeholder="John Sample">
 				<input type="text" name="age" placeholder="98">
 				<input type="submit"/>
-				<div x-success></div>
 		</form>
 		
-		{{teste1}}{{teste2}}
-
-		{{teste2}}<br>
-		{{teste1}}
-		{{teste1}}{{teste2}}
-
-		<form method="POST" action="http://localhost:8080/x/teste" x-model="employee" x-ajax>
-				<input type="text" name="name" value="John Sample" placeholder="John Sample">
-				<input type="text" name="age" placeholder="98">
-				<input type="submit"/>
-				<div x-success></div>
-		</form>
 		<table border="1">
 			<thead>
 				<tr>
@@ -48,7 +35,7 @@
 		</table>
 
 
-		<table border="1">
+<!-- 		<table border="1">
 			<thead>
 				<tr>
 					<th>Name</th>
@@ -67,7 +54,7 @@
 					<td><button x-click="edit({{$index}})">Edit</button></td>
 				</tr>
 			</tbody>
-		</table>
+		</table> -->
 
 
 		<button x-click='alert("MyText")'>ALERT</button>
@@ -76,7 +63,7 @@
 	</div>
 
 		<script type="text/javascript" src="../dist/x.min.js"></script>
-		<script type="text/javascript" src="js/Services/messagesService.js"></script>
+		<!--script type="text/javascript" src="js/Services/messagesService.js"></script-->
 		<script type="text/javascript" src="js/controllers/EmployeesController.js"></script>
 
 	</body>

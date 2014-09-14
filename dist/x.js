@@ -1,33 +1,37 @@
 //File : src/core/x.js
 
 (function(world){
-  'use strict';
-  NodeList.prototype.forEach = Array.prototype.forEach;
-  world.x = function(){ 
+'use strict';
+NodeList.prototype.forEach = Array.prototype.forEach;
+world.x = function(){ 
 
-    return {
-      methods : {
+  return {
+    methods : {
 
+    },
+    controllers : {
+
+    },
+    services : {
+
+    },
+    core : {
+      randomString : function(){
+        return 'randomString';
       },
-      controllers : {
+      parsers : {
 
-      },
-      services : {
-
-      },
-      core : {
-        randomString : function(){
-          return 'randomString';
-        },
-        parsers : {
-
-        }
       }
-    };
-  }();
+    }
+  };
+}();
 })(this);
 //File : src/core/coreMethods/x.core.addController.js
-
+/**
+ * Instantiate a new Controller in the application
+ * @param      {String}   ControllerName
+ * @param      {HTMLElement}   htmlElement
+ */
 (function(x){
 	'use strict';
 
@@ -42,8 +46,13 @@
 	};
 
 })(this.x);
-//File : src/core/coreMethods/x.core.addParser.js
 
+//File : src/core/coreMethods/x.core.addParser.js
+/**
+ * Add a new DOM parser
+ * @param      {String}   parserName
+ * @param      {Function}   modifier function
+ */
 (function(x){
 	'use strict';
 
@@ -61,123 +70,111 @@
 	};
 
 })(this.x);
+
 //File : src/core/coreMethods/x.core.ajax.js
 
 (function(x){
-	'use strict';
-	x.core.ajax = function(args){
-				var callback = args.callback || function(){return false;};
-				var url = args.url;
-				var method = args.method || 'GET';
-				var data = args.data || false;
+'use strict';
+x.core.ajax = function(args){
+			var callback = args.callback || function(){return false;};
+			var url = args.url;
+			var method = args.method || 'GET';
+			var data = args.data || false;
 
-		        var xhr;
-		         
-		        if(typeof XMLHttpRequest !== 'undefined') xhr = new XMLHttpRequest();
-		        else {
-		            var versions = ["MSXML2.XmlHttp.5.0", 
-		                            "MSXML2.XmlHttp.4.0",
-		                            "MSXML2.XmlHttp.3.0", 
-		                            "MSXML2.XmlHttp.2.0",
-		                            "Microsoft.XmlHttp"];
-		 
-		             for(var i = 0, len = versions.length; i < len; i++) {
-		                try {
-		                    xhr = new ActiveXObject(versions[i]);
-		                    break;
-		                }
-		                catch(e){}
-		             }
-		        }
-		        xhr.onreadystatechange = ensureReadiness;
-		        function ensureReadiness() {
-		            if(xhr.readyState < 4) {
-		                return;
-		            }
-		            if(xhr.status !== 200) {
-		                return;
-		            }
-		            if(xhr.readyState === 4) {
-		                for (var controller in x.controllers){
-		                	x.controllers[controller].xApply(callback,[xhr.response]);
-		                }
-		            }           
-		        }
+	        var xhr;
+	         
+	        if(typeof XMLHttpRequest !== 'undefined') xhr = new XMLHttpRequest();
+	        else {
+	            var versions = ["MSXML2.XmlHttp.5.0", 
+	                            "MSXML2.XmlHttp.4.0",
+	                            "MSXML2.XmlHttp.3.0", 
+	                            "MSXML2.XmlHttp.2.0",
+	                            "Microsoft.XmlHttp"];
+	 
+	             for(var i = 0, len = versions.length; i < len; i++) {
+	                try {
+	                    xhr = new ActiveXObject(versions[i]);
+	                    break;
+	                }
+	                catch(e){}
+	             }
+	        }
+	        xhr.onreadystatechange = ensureReadiness;
+	        function ensureReadiness() {
+	            if(xhr.readyState < 4) {
+	                return;
+	            }
+	            if(xhr.status !== 200) {
+	                return;
+	            }
+	            if(xhr.readyState === 4) {
+	                for (var controller in x.controllers){
+	                	x.controllers[controller].xApply(callback,[xhr.response]);
+	                }
+	            }           
+	        }
 
-		        xhr.open(method, url, true);
-		        if (method.toUpperCase() == 'POST'){
-					xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-					data = x.core.serialize(data);
-					xhr.send(data);
-		        }else{
-					xhr.send('');     	
-		        }
-	};
-
-
+	        xhr.open(method, url, true);
+	        if (method.toUpperCase() == 'POST'){
+				xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+				data = x.core.serialize(data);
+				xhr.send(data);
+	        }else{
+				xhr.send('');     	
+	        }
+};
 })(this.x);
-//File : src/core/coreMethods/x.core.bind.js
 
-(function(x){
-	'use strict';
-
-	x.core.bind = function(parserName,parser){
-
-	};
-
-
-	x.core.bindField = function(){
-
-	};
-
-
-})(this.x);
 //File : src/core/coreMethods/x.core.checkDependencies.js
 
 (function(x){
 
-  'use strict';
-  x.core.checkDependencies = function(data){
-  	var rDependencies = [];
-  	for(var dependencie in data){
-  		if (dependencie < data.length-1){
-
-  			if (x.services[data[dependencie]]){
-
-  				rDependencies[dependencie] = x.services[data[dependencie]];
-  			}else{
-  				throw('Dependencie Not Fount =[');
-  			}
-  		}
-  	}
-
-  	return rDependencies;
-
-  };
+'use strict';
+/**
+ * Check and load Controller dependencies
+ * @param      {Array}   dependenciesNames
+ */
+x.core.checkDependencies = function(dependencies){
+	var rDependencies = [];
+	for(var dependencie in dependencies){
+		if (dependencie < dependencies.length-1){
+			if (x.services[dependencies[dependencie]]){
+				rDependencies[dependencie] = x.services[dependencies[dependencie]];
+			}else{
+				throw(dependencies[dependencie]+' Dependencie Not Fount =[');
+			}
+		}
+	}
+	return rDependencies;
+};
 })(this.x);
 
 //File : src/core/coreMethods/x.core.extractField.js
 
 (function(x){
 	'use strict';
-	x.core.extractField = function(stringField,object,index){
-		stringField = stringField.replace(/\}\}/g,'').replace(/\{\{/g,'').trim();
+/**
+ * Find an object field by string 
+ * @param      {String}   dependenciesNames
+ */
+x.core.extractField = function(stringField,object,index){
+	stringField = stringField.replace(/\}\}/g,'').replace(/\{\{/g,'').trim();
 
-		if (object){
-			var fieldPath = '';
-			if (stringField.indexOf('.') > 0){
-				fieldPath = stringField.split('.');
-				stringField = stringField.replace(fieldPath[0]+'.','');
-				return x.core.extractField(stringField,object[fieldPath[0]]);
-				}else if(stringField.indexOf('][') > 0){
-					fieldPath = stringField.split('][');
-				}else if(stringField.indexOf('[') > 0){
-					fieldPath = stringField.split('[');
-			}else{
-				return object[stringField];
-			}
+	if (object){
+		var fieldPath = '';
+		if (stringField.indexOf('.') > 0){
+			fieldPath = stringField.split('.');
+			stringField = stringField.replace(fieldPath[0]+'.','');
+			return x.core.extractField(stringField,object[fieldPath[0]]);
+			}else if(stringField.indexOf('][') > 0){
+				fieldPath = stringField.split('][');
+			}else if(stringField.indexOf('[') > 0){
+				fieldPath = stringField.split('[');
+		}else{
+			return object[stringField];
 		}
-	};
+	}
+};
 }(this.x));
 //File : src/core/coreMethods/x.core.mapper.js
 
@@ -244,6 +241,7 @@
 (function(x){
 
   'use strict';
+  
   x.core.parse = function(){
 
     if(typeof arguments[0] == 'string'){
@@ -377,123 +375,127 @@
 //File : src/core/parsers/x-content.js
 
 (function(x){
-	'use strict';
-	x.core.addParser('x-content',function(element,controller){
-		var URL = element.getAttribute('x-content');
-		var collection = element.getAttribute('x-collection') || x.core.randomString();
-		var tmpl = element.innerHTML;
-		var root = 'data' || element.getAttribute('x-root');
-		var result = '';
-		var tmplVars = tmpl.match(/\{\{.*\}\}/g);
+'use strict';
+x.core.addParser('x-content',function(element,controller){
+	var URL = element.getAttribute('x-content');
+	var collection = element.getAttribute('x-collection') || x.core.randomString();
+	var tmpl = element.innerHTML;
+	var root = 'data' || element.getAttribute('x-root');
+	var result = '';
+	var tmplVars = tmpl.match(/\{\{.*\}\}/g);
 
 
 
 
-		x.core.ajax({
-			url : URL,
-			callback : function(e){
+	x.core.ajax({
+		url : URL,
+		callback : function(e){
 
-				e = JSON.parse(e);
-				controller[collection] = e[root]; 
+			e = JSON.parse(e);
+			controller[collection] = e[root]; 
 
-				e[root].forEach(function(data,index){
-					var iteration = tmpl;
-					data.$index = index;
-					for(var field in tmplVars){
-						var tmplVar = tmplVars[field].replace(/}}|{{/g,'');
-						iteration = iteration.replace(tmplVars[field],x.core.extractField(tmplVar,data));
-					}
-					result = result+iteration;
-				});
-				element.innerHTML = result;
+			e[root].forEach(function(data,index){
+				var iteration = tmpl;
+				data.$index = index;
+				for(var field in tmplVars){
+					var tmplVar = tmplVars[field].replace(/}}|{{/g,'');
+					iteration = iteration.replace(tmplVars[field],x.core.extractField(tmplVar,data));
+				}
+				result = result+iteration;
+			});
+			element.innerHTML = result;
 
-				x.core.parse('events',element,controller);
-			}
-		});
+			x.core.parse('events',element,controller);
+		}
 	});
+});
 })(this.x);
 //File : src/core/parsers/x-controller.js
 
 (function(x){
-  'use strict';
-  x.core.addParser('x-controller',function(element){
+'use strict';
+x.core.addParser('x-controller',function(element){
 
-    var controller = element.getAttribute('x-controller');
-    return x.core.addController(controller,element);
+	var controller = element.getAttribute('x-controller');
+	return x.core.addController(controller,element);
 
-  });
+});
 })(this.x);
 //File : src/core/parsers/x-events.js
 
 (function(x){
-  'use strict';
+'use strict';
 
-  x.core.addParser('events.x-click',function(element,controller){
+x.core.addParser('events.x-click',function(element,controller){
 
-    var action = element.getAttribute('x-click');
-    var params = action.match(/\(.*\)/g)[0].replace('(','').replace(')','').split(',');
-    for(var param in params){
+  var action = element.getAttribute('x-click');
+  var params = action.match(/\(.*\)/g)[0].replace('(','').replace(')','').split(',');
+  for(var param in params){
 
-      if (params[param].indexOf('function') != -1){
-      }else{
-        if (params[param][0] != "'" && params[param][0] != '"' && params[param][0] != '['){
-          params[param] = parseInt(params[param]);
-        }else if (params[param][0] == "'" || params[param][0] == '"'){
+    if (params[param].indexOf('function') != -1){
+    }else{
+      if (params[param][0] != "'" && params[param][0] != '"' && params[param][0] != '['){
+        params[param] = parseInt(params[param]);
+      }else if (params[param][0] == "'" || params[param][0] == '"'){
 
-          params[param] = params[param].replace('"','').replace("'",'').replace('"','').replace("'",'').replace('"','').replace("'",'');
-        }
+        params[param] = params[param].replace('"','').replace("'",'').replace('"','').replace("'",'').replace('"','').replace("'",'');
       }
     }
+  }
 
-    action = action.match(/.*\(/g)[0].replace('(','');
-      element.addEventListener('click',function(){
-        controller.xApply(controller[action],params);
-      });
+  action = action.match(/.*\(/g)[0].replace('(','');
 
+    if (!controller[action]){
+      throw('Method '+action+ ' not found =[');
+    }
+    element.addEventListener('click',function(){
+      controller.xApply(controller[action],params);
     });
 
-  x.core.addParser('events.x-mouseover',function(element,controller){
+  });
 
-    var action = element.getAttribute('x-mouseover');
-    var params = action.match(/\(.*\)/g)[0].replace('(','').replace(')','').split(',');
-    for(var param in params){
+x.core.addParser('events.x-mouseover',function(element,controller){
 
-      if (params[param].indexOf('function') != -1){
-      }else{
-        if (params[param][0] != "'" && params[param][0] != '"' && params[param][0] != '['){
-          params[param] = parseInt(params[param]);
-        }else if (params[param][0] == "'" || params[param][0] == '"'){
+  var action = element.getAttribute('x-mouseover');
+  var params = action.match(/\(.*\)/g)[0].replace('(','').replace(')','').split(',');
+  for(var param in params){
 
-          params[param] = params[param].replace('"','').replace("'",'').replace('"','').replace("'",'').replace('"','').replace("'",'');
-        }
+    if (params[param].indexOf('function') != -1){
+    }else{
+      if (params[param][0] != "'" && params[param][0] != '"' && params[param][0] != '['){
+        params[param] = parseInt(params[param]);
+      }else if (params[param][0] == "'" || params[param][0] == '"'){
+
+        params[param] = params[param].replace('"','').replace("'",'').replace('"','').replace("'",'').replace('"','').replace("'",'');
       }
     }
+  }
 
-    action = action.match(/.*\(/g)[0].replace('(','');
-      element.addEventListener('mouseover',function(){
-        controller[action].apply(controller,params);
-      });
+  action = action.match(/.*\(/g)[0].replace('(','');
+    element.addEventListener('mouseover',function(){
+      controller[action].apply(controller,params);
+    });
 
-  });
+});
 
 
 })(this.x);
 //File : src/core/parsers/x-ajax.js
 
 (function(x){
-	'use strict';
-	x.core.addParser('x-repeat',function(element,controller){
-		var statement = element.getAttribute('x-repeat').trim().split('in');
-		var data = statement[1].trim();
-		var template = element.innerHTML;
-		var iterations = controller[data].length;
+'use strict';
+x.core.addParser('x-repeat',function(element,controller){
+	var statement = element.getAttribute('x-repeat').trim().split('in');
+	var data = statement[1].trim();
+	var template = element.innerHTML;
+	var iterations = controller[data].length;
 
+	x.core.repeatIterator(statement,data,template,element,controller);
+
+	controller.watch(data,function(){
 		x.core.repeatIterator(statement,data,template,element,controller);
-
-		controller.watch(data,function(){
-			x.core.repeatIterator(statement,data,template,element,controller);
-		});
 	});
+});
 })(this.x);
 
 //File : src/controller.js
@@ -508,171 +510,172 @@
 //File : src/controller.js
 
 (function(x){
-  'use strict';
+'use strict';
 
-  x.Controller = function(controllerName,htmlElement){
+x.Controller = function(controllerName,htmlElement){
 
-    //Check if this controller is being generated by DOM or API
-    if (arguments[1].tagName || arguments[1] == 'API_CALL'){
+  //Check if this controller is being generated by DOM or API
+  if (arguments[1].tagName || arguments[1] == 'API_CALL'){
 
-      this.htmlElement = htmlElement;
-      this.controllerName = controllerName;
-      this.watchers = [];
-      this.placeholders = [];
-      return {
+    this.htmlElement = htmlElement;
+    this.controllerName = controllerName;
+    this.watchers = [];
+    this.placeholders = [];
+    return {
 
-        addPlaceholder : function(field,place){
-          
-          if (!this.placeholders)
-            this.placeholders = {};
-          if (!this.placeholders[field])
-            this.placeholders[field] = [];
+      addPlaceholder : function(field,place){
+        
+        if (!this.placeholders)
+          this.placeholders = {};
+        if (!this.placeholders[field])
+          this.placeholders[field] = [];
 
-          this.placeholders[field].push(place);
-        },
+        this.placeholders[field].push(place);
+      },
 
-        getPlaceholders : function(index){
-          return this.placeholders[index];
-        },
+      getPlaceholders : function(index){
+        return this.placeholders[index];
+      },
 
-        watch : function(field,callback){
-          if (!this.watchers)
-            this.watchers = {};
-          if (!this.watchers[field])
-            this.watchers[field] = [];
+      watch : function(field,callback){
+        if (!this.watchers)
+          this.watchers = {};
+        if (!this.watchers[field])
+          this.watchers[field] = [];
 
-          this.watchers[field].push(callback);
+        this.watchers[field].push(callback);
 
-        },
-        xApply : function(action,params){
+      },
+      xApply : function(action,params){
 
-          action.apply(this,params);
+        action.apply(this,params);
 
-          var changes = action.toString().match(/(this..+?\s*=)|(this..+?\s*.splice)|(this..+?\s*.split)/g);
+        var changes = action.toString().match(/(this..+?\s*=)|(this..+?\s*.splice)|(this..+?\s*.split)/g);
 
-          if (changes !== null){
-            changes.forEach(function(changed,repI){
+        if (changes !== null){
+          console.log(changes);
+          changes.forEach(function(changed,repI){
 
-              changed = changed.replace(/(\s?=)|(this\.)|(this\[)/,'').replace(/\s?=/,'').replace(/\'\]/,'').replace("'",'').replace(/\.split/,'').replace(/\.splice/,'');
+            changed = changed.replace(/(\s?=)|(this\.)|(this\[)/,'').replace(/\s?=/,'').replace(/\'\]/,'').replace("'",'').replace(/\.split/,'').replace(/\.splice/,'');
 
-              for (var watcher in this.watchers[changed]){
-                this.watchers[changed][watcher]();
+            for (var watcher in this.watchers[changed]){
+              this.watchers[changed][watcher]();
+            }
+
+            var links =  this.getPlaceholders('{{'+changed+'}}');
+            for (var link in links){
+              if (links[link].originalFields['{{'+changed+'}}'] != this[changed]){
+                links[link].textContent = links[link].originalText;
+                links[link].originalFields['{{'+changed+'}}'] = this[changed];
+                links[link].textContent = x.core.render(links[link],links[link].originalFields);
               }
-
-              var links =  this.getPlaceholders('{{'+changed+'}}');
-              for (var link in links){
-                if (links[link].originalFields['{{'+changed+'}}'] != this[changed]){
-                  links[link].textContent = links[link].originalText;
-                  links[link].originalFields['{{'+changed+'}}'] = this[changed];
-                  links[link].textContent = x.core.render(links[link],links[link].originalFields);
-                }
-              }
-            }.bind(this));
-          }
-        },
-        appendModel : function(model){
-          this[model.getModelName()] = model; 
+            }
+          }.bind(this));
         }
-      };
-      
-    }else{
-
-      if (x.controllers[controllerName] === undefined){
-        //Controller DO NOT exists
-        x.controllers[controllerName] = new x.Controller(controllerName,'API_CALL');
+      },
+      appendModel : function(model){
+        this[model.getModelName()] = model; 
       }
+    };
+    
+  }else{
 
-
-      arguments[1][arguments[1].length-1].apply(x.controllers[controllerName],x.core.checkDependencies(arguments[1]));
-      // arguments[1][arguments[1].length-1].call(x.controllers[controllerName]);
-      return x.controllers[controllerName];
+    if (x.controllers[controllerName] === undefined){
+      //Controller DO NOT exists
+      x.controllers[controllerName] = new x.Controller(controllerName,'API_CALL');
     }
-  };
+
+
+    arguments[1][arguments[1].length-1].apply(x.controllers[controllerName],x.core.checkDependencies(arguments[1]));
+    // arguments[1][arguments[1].length-1].call(x.controllers[controllerName]);
+    return x.controllers[controllerName];
+  }
+};
 
 })(this.x);
 //File : src/controller.js
 
 (function(x){
-  'use strict';
+'use strict';
 
-  x.Model = function(controller,htmlElement){
-    var self = this;
-    var data = {};
-    var modelName = htmlElement.getAttribute('x-model');
+x.Model = function(controller,htmlElement){
+  var self = this;
+  var data = {};
+  var modelName = htmlElement.getAttribute('x-model');
 
-    var htmlElements = [htmlElement];
+  var htmlElements = [htmlElement];
 
-    var getInputs = function(){
-      var elements = htmlElement.getElementsByTagName('input');
-      var temp = {};
-      for(var element in elements){
-        if (typeof elements[element]  == 'object'){
-          var field = elements[element].getAttribute('name');
-          temp[field] = elements[element].value;
-          elements[element].addEventListener('keypress',inputChange);
-          elements[element].addEventListener('change',inputChange);
-        }
+  var getInputs = function(){
+    var elements = htmlElement.getElementsByTagName('input');
+    var temp = {};
+    for(var element in elements){
+      if (typeof elements[element]  == 'object'){
+        var field = elements[element].getAttribute('name');
+        temp[field] = elements[element].value;
+        elements[element].addEventListener('keypress',inputChange);
+        elements[element].addEventListener('change',inputChange);
       }
-      return absorveData(data,temp);
-    };
-
-    var inputChange = function(e){
-      var el = e.target;
-      var name = el.getAttribute('name');
-      var value = el.value;
-      data[name] =  value;
-      broadcast(data);
-    };
-
-    var absorveData = function(data,newData){
-      for(var field in newData){
-        data[field] = newData[field];
-      }
-      return data;
-    };
-
-    var broadcast = function(data){
-      for(var propertie in data){
-        applyValues(propertie,data[propertie]);
-      }
-    };
-
-    var applyValues = function(propertie,value){
-      htmlElements.forEach(function(element){
-        element.querySelectorAll('[name="'+propertie+'"]').forEach(function(a,b){
-          a.value = value;
-        });
-      });
-
-    };
-
-    var structByDom = function(){
-      absorveData(getInputs(),data);
-      return Model;
-    };
-
-
-    structByDom();
-
-    var Model = this;
-    return {
-      appendDom : function(element){
-        htmlElements.push(element);
-      },
-      getModelName : function(){
-        return modelName;
-      },
-      getData : function(){
-        var result = {};
-        result[modelName] = data;
-        return result;
-      },
-      edit : function(record){
-        broadcast(record);
-        return record;
-      }
-    };
+    }
+    return absorveData(data,temp);
   };
+
+  var inputChange = function(e){
+    var el = e.target;
+    var name = el.getAttribute('name');
+    var value = el.value;
+    data[name] =  value;
+    broadcast(data);
+  };
+
+  var absorveData = function(data,newData){
+    for(var field in newData){
+      data[field] = newData[field];
+    }
+    return data;
+  };
+
+  var broadcast = function(data){
+    for(var propertie in data){
+      applyValues(propertie,data[propertie]);
+    }
+  };
+
+  var applyValues = function(propertie,value){
+    htmlElements.forEach(function(element){
+      element.querySelectorAll('[name="'+propertie+'"]').forEach(function(a,b){
+        a.value = value;
+      });
+    });
+
+  };
+
+  var structByDom = function(){
+    absorveData(getInputs(),data);
+    return Model;
+  };
+
+
+  structByDom();
+
+  var Model = this;
+  return {
+    appendDom : function(element){
+      htmlElements.push(element);
+    },
+    getModelName : function(){
+      return modelName;
+    },
+    getData : function(){
+      var result = {};
+      result[modelName] = data;
+      return result;
+    },
+    edit : function(record){
+      broadcast(record);
+      return record;
+    }
+  };
+};
 
 })(this.x);
 //File : src/controller.js
