@@ -49,7 +49,7 @@ describe('Testing X Controller', function () {
 	});
 
 
-	it('API after DOM - should create the controller', function() {
+	it('JSAPI after DOM - should create the controller', function() {
 
 		x.controllers = {};
 

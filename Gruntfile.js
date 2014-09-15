@@ -88,6 +88,10 @@ module.exports = function(grunt) {
 
   tasks.forEach(grunt.loadNpmTasks);
 
+  grunt.registerTask('hint', ['jshint']);
+
+  grunt.registerTask('test', ['jasmine']);
+
   grunt.registerTask('default', ['jshint', 'concat','jasmine','watch', 'uglify']);
 
 };

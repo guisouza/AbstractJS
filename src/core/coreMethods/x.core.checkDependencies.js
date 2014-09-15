@@ -14,7 +14,7 @@ x.core.checkDependencies = function(dependencies){
 			if (x.services[dependencies[dependencie]]){
 				rDependencies[dependencie] = x.services[dependencies[dependencie]];
 			}else{
-				throw(dependencies[dependencie]+' Dependencie Not Fount =[');
+				throw(dependencies[dependencie]+' dependencie Not Fount =[');
 			}
 		}
 	}

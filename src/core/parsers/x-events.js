@@ -20,11 +20,14 @@ x.core.addParser('events.x-click',function(element,controller){
     }
   }
 
+  console.log(controller);
+
   action = action.match(/.*\(/g)[0].replace('(','');
 
     if (!controller[action]){
       throw('Method '+action+ ' not found =[');
     }
+
     element.addEventListener('click',function(){
       controller.xApply(controller[action],params);
     });
