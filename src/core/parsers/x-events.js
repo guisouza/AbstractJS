@@ -14,13 +14,10 @@ x.core.addParser('events.x-click',function(element,controller){
       if (params[param][0] != "'" && params[param][0] != '"' && params[param][0] != '['){
         params[param] = parseInt(params[param]);
       }else if (params[param][0] == "'" || params[param][0] == '"'){
-
-        params[param] = params[param].replace('"','').replace("'",'').replace('"','').replace("'",'').replace('"','').replace("'",'');
+        params[param] = params[param].replace(/'/,'').replace(/"/,'');
       }
     }
   }
-
-  console.log(controller);
 
   action = action.match(/.*\(/g)[0].replace('(','');
 

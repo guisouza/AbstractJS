@@ -248,16 +248,20 @@ x.core.extractField = function(stringField,object,index){
       applyParserGroup(arguments[0],arguments[1],arguments[2]);
     }else{
       var controllerElements = document.querySelectorAll('[x-controller]');
-      controllerElements.forEach(function(element,index){
-        var controller = x.core.parsers['x-controller'](element);
-        for(var parser in x.core.parsers){
-          if (typeof x.core.parsers[parser] == 'function'){
-            applyParser(parser,x.core.parsers[parser],element,controller);
-          }else{
-            applyParserGroup(parser,element,controller);
+      for(var element in controllerElements){
+        var index = element;
+        element = controllerElements[element];
+        if (element.tagName !== undefined){
+          var controller = x.core.parsers['x-controller'](element);
+          for(var parser in x.core.parsers){
+            if (typeof x.core.parsers[parser] == 'function'){
+              applyParser(parser,x.core.parsers[parser],element,controller);
+            }else{
+              applyParserGroup(parser,element,controller);
+            }
           }
         }
-      });
+      }
     }
 
     function applyParserGroup(parserGroup,element,controller){
@@ -437,13 +441,10 @@ x.core.addParser('events.x-click',function(element,controller){
       if (params[param][0] != "'" && params[param][0] != '"' && params[param][0] != '['){
         params[param] = parseInt(params[param]);
       }else if (params[param][0] == "'" || params[param][0] == '"'){
-
-        params[param] = params[param].replace('"','').replace("'",'').replace('"','').replace("'",'').replace('"','').replace("'",'');
+        params[param] = params[param].replace(/'/,'').replace(/"/,'');
       }
     }
   }
-
-    console.log(controller);
 
   action = action.match(/.*\(/g)[0].replace('(','');
 
