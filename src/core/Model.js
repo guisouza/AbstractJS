@@ -1,30 +1,46 @@
 //File : src/controller.js
 
 (function(x){
-'use strict';
-
-x.Model = function(controller,htmlElement){
+  'use strict';
+/**
+ * [Model description]
+ * @param {[type]} controller
+ * @param {[type]} htmlElement
+ */
+ x.Model = function(controller,htmlElement){
   var self = this;
   var data = {};
   var modelName = htmlElement.getAttribute('x-model');
 
   var htmlElements = [htmlElement];
 
-  var getInputs = function(){
-    var elements = htmlElement.getElementsByTagName('input');
-    var temp = {};
-    for(var element in elements){
-      if (typeof elements[element]  == 'object'){
-        var field = elements[element].getAttribute('name');
-        temp[field] = elements[element].value;
-        elements[element].addEventListener('keypress',inputChange);
-        elements[element].addEventListener('change',inputChange);
-      }
-    }
-    return absorveData(data,temp);
-  };
 
-  var inputChange = function(e){
+  /**
+    * [getInputs description]
+    * @return {[type]}
+    */
+    var getInputs = function(){
+      var elements = htmlElement.getElementsByTagName('input');
+      var temp = {};
+      for(var element in elements){
+        if (typeof elements[element]  == 'object'){
+          var field = elements[element].getAttribute('name');
+          temp[field] = elements[element].value;
+          elements[element].addEventListener('keypress',inputChange);
+          elements[element].addEventListener('change',inputChange);
+        }
+      }
+      return absorveData(data,temp);
+    };
+
+
+
+  /**
+   * [inputChange description]
+   * @param  {[type]} e
+   * @return {[type]}
+   */
+   var inputChange = function(e){
     var el = e.target;
     var name = el.getAttribute('name');
     var value = el.value;
@@ -32,29 +48,53 @@ x.Model = function(controller,htmlElement){
     broadcast(data);
   };
 
-  var absorveData = function(data,newData){
+
+  /**
+   * [absorveData description]
+   * @param  {[type]} data
+   * @param  {[type]} newData
+   * @return {[type]}
+   */
+   var absorveData = function(data,newData){
     for(var field in newData){
       data[field] = newData[field];
     }
     return data;
   };
 
-  var broadcast = function(data){
+
+  /**
+   * [broadcast description]
+   * @param  {[type]} data
+   * @return {[type]}
+   */
+   var broadcast = function(data){
     for(var propertie in data){
       applyValues(propertie,data[propertie]);
     }
   };
 
-  var applyValues = function(propertie,value){
+
+  /**
+   * [applyValues description]
+   * @param  {[type]} propertie
+   * @param  {[type]} value
+   * @return {[type]}
+   */
+   var applyValues = function(propertie,value){
     htmlElements.forEach(function(element){
       element.querySelectorAll('[name="'+propertie+'"]').forEach(function(a,b){
         a.value = value;
       });
     });
-
   };
 
-  var structByDom = function(){
+
+  /**
+   * [structByDom description]
+   * @return {[type]}
+   */
+   var structByDom = function(){
     absorveData(getInputs(),data);
     return Model;
   };
@@ -64,18 +104,40 @@ x.Model = function(controller,htmlElement){
 
   var Model = this;
   return {
-    appendDom : function(element){
+
+    /**
+     * [appendDom description]
+     * @param  {[type]} element
+     * @return {[type]}
+     */
+     appendDom : function(element){
       htmlElements.push(element);
     },
-    getModelName : function(){
+
+    /**
+     * [getModelName description]
+     * @return {[type]}
+     */
+     getModelName : function(){
       return modelName;
     },
-    getData : function(){
+
+    /**
+     * [getData description]
+     * @return {[type]}
+     */
+     getData : function(){
       var result = {};
       result[modelName] = data;
       return result;
     },
-    edit : function(record){
+
+    /**
+     * [edit description]
+     * @param  {[type]} record
+     * @return {[type]}
+     */
+     edit : function(record){
       broadcast(record);
       return record;
     }

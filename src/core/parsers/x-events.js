@@ -3,6 +3,14 @@
 (function(x){
 'use strict';
 
+
+
+/**
+ * [description]
+ * @param  {[type]} element
+ * @param  {[type]} controller
+ * @return {[type]}
+ */
 x.core.addParser('events.x-click',function(element,controller){
 
   var action = element.getAttribute('x-click');
@@ -31,6 +39,14 @@ x.core.addParser('events.x-click',function(element,controller){
 
   });
 
+
+
+/**
+ * [description]
+ * @param  {[type]} element
+ * @param  {[type]} controller
+ * @return {[type]}
+ */
 x.core.addParser('events.x-mouseover',function(element,controller){
 
   var action = element.getAttribute('x-mouseover');

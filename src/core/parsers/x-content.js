@@ -2,6 +2,12 @@
 
 (function(x){
 'use strict';
+/**
+ * [description]
+ * @param  {[type]} element
+ * @param  {[type]} controller
+ * @return {[type]}
+ */
 x.core.addParser('x-content',function(element,controller){
 	var URL = element.getAttribute('x-content');
 	var collection = element.getAttribute('x-collection') || x.core.randomString();
@@ -9,9 +15,6 @@ x.core.addParser('x-content',function(element,controller){
 	var root = 'data' || element.getAttribute('x-root');
 	var result = '';
 	var tmplVars = tmpl.match(/\{\{.*\}\}/g);
-
-
-
 
 	x.core.ajax({
 		url : URL,

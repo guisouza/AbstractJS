@@ -2,6 +2,15 @@
 
 (function(x){
 	'use strict';
+  /**
+   * [repeatIterator description]
+   * @param  {[type]} statement
+   * @param  {[type]} data
+   * @param  {[type]} template
+   * @param  {[type]} element
+   * @param  {[type]} controller
+   * @return {[type]}
+   */
 	x.core.repeatIterator = function(statement,data,template,element,controller){
 
     var tmplVars = template.match(/\{\{.*\}\}/g);

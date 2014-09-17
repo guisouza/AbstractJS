@@ -2,6 +2,12 @@
 
 (function(x){
 'use strict';
+/**
+ * [description]
+ * @param  {[type]} element
+ * @param  {[type]} controller
+ * @return {[type]}
+ */
 x.core.addParser('x-repeat',function(element,controller){
 	var statement = element.getAttribute('x-repeat').trim().split('in');
 	var data = statement[1].trim();

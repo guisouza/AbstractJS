@@ -2,6 +2,11 @@
 
 (function(x){
 'use strict';
+/**
+ * Ajax calls
+ * @param  {Object} args
+ * @return {Boolean}
+ */
 x.core.ajax = function(args){
 			var callback = args.callback || function(){return false;};
 			var url = args.url;

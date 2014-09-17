@@ -1,7 +1,14 @@
 //File : src/core/parsers/x-ajax.js
 
+
 (function(x){
 	'use strict';
+	/**
+	 * [description]
+	 * @param  {[type]} element
+	 * @param  {[type]} controller
+	 * @return {[type]}
+	 */
 	x.core.addParser('x-ajax',function(element,controller){
 		var URL = element.getAttribute('x-ajax');
 

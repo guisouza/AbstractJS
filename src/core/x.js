@@ -1,8 +1,14 @@
 //File : src/core/x.js
 
+
 (function(world){
 'use strict';
 NodeList.prototype.forEach = Array.prototype.forEach;
+
+/**
+ * [x description]
+ * @return {[type]}
+ */
 world.x = function(){ 
 
   return {
@@ -16,9 +22,6 @@ world.x = function(){
 
     },
     core : {
-      randomString : function(){
-        return 'randomString';
-      },
       parsers : {
 
       }

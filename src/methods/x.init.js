@@ -1,12 +1,13 @@
 //File : src/methods/x.init.js
 (function(x,world){
 	'use strict';
+
 	/**
 	 * Check and load Controller dependencies
-	 * @param      {Array}   dependenciesNames
+	 * @return {[type]}
 	 */
 	x.methods.init = function(){
-		x.core.parse();
+		return x.core.parse();
 	};
 	document.addEventListener('DOMContentLoaded', x.methods.init, false);
 })(this.x,this);

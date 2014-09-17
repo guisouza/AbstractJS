@@ -1,8 +1,14 @@
 //File : src/core/x.js
 
+
 (function(world){
 'use strict';
 NodeList.prototype.forEach = Array.prototype.forEach;
+
+/**
+ * [x description]
+ * @return {[type]}
+ */
 world.x = function(){ 
 
   return {
@@ -16,9 +22,6 @@ world.x = function(){
 
     },
     core : {
-      randomString : function(){
-        return 'randomString';
-      },
       parsers : {
 
       }
@@ -27,54 +30,57 @@ world.x = function(){
 }();
 })(this);
 //File : src/core/coreMethods/x.core.addController.js
-/**
- * Instantiate a new Controller in the application
- * @param      {String}   ControllerName
- * @param      {HTMLElement}   htmlElement
- */
+
 (function(x){
-	'use strict';
+'use strict';
+/**
+ * [addController description]
+ * @param {[type]} controllerName
+ * @param {[type]} htmlElement
+ */
+x.core.addController = function(controllerName,htmlElement){
 
-	x.core.addController = function(controllerName,htmlElement){
-
-		if (x.controllers[controllerName] === undefined){
-			x.controllers[controllerName] = new x.Controller(controllerName,htmlElement);
-		}
-		x.core.mapper.map(htmlElement,x.controllers[controllerName]);
-		
-		return x.controllers[controllerName];
-	};
+	if (x.controllers[controllerName] === undefined){
+		x.controllers[controllerName] = new x.Controller(controllerName,htmlElement);
+	}
+	x.core.mapper.map(htmlElement,x.controllers[controllerName]);
+	
+	return x.controllers[controllerName];
+};
 
 })(this.x);
 
 //File : src/core/coreMethods/x.core.addParser.js
+
+(function(x){
+'use strict';
 /**
  * Add a new DOM parser
- * @param      {String}   parserName
- * @param      {Function}   modifier function
+ * @param {[type]} parserName
+ * @param {[type]} parser
  */
-(function(x){
-	'use strict';
-
-	x.core.addParser = function(parserName,parser){
-		if (parserName.indexOf('.') != -1){
-			parserName = parserName.split('.');
-			if (!x.core.parsers[parserName[0]]){
-				x.core.parsers[parserName[0]] = {};
-			}
-			x.core.parsers[parserName[0]][parserName[1]] = parser;
-		}else{
-			x.core.parsers[parserName] = parser;
+x.core.addParser = function(parserName,parser){
+  if (parserName.indexOf('.') != -1){
+		parserName = parserName.split('.');
+		if (!x.core.parsers[parserName[0]]){
+			x.core.parsers[parserName[0]] = {};
 		}
-		
-	};
-
+    x.core.parsers[parserName[0]][parserName[1]] = parser;
+	}else{
+    x.core.parsers[parserName] = parser;
+	}
+};
 })(this.x);
 
 //File : src/core/coreMethods/x.core.ajax.js
 
 (function(x){
 'use strict';
+/**
+ * Ajax calls
+ * @param  {Object} args
+ * @return {Boolean}
+ */
 x.core.ajax = function(args){
 			var callback = args.callback || function(){return false;};
 			var url = args.url;
@@ -179,73 +185,132 @@ x.core.extractField = function(stringField,object,index){
 //File : src/core/coreMethods/x.core.mapper.js
 
 (function(x){
-	'use strict';
-	x.core.mapper = (function(stringField,object){
+'use strict';
+/**
+ * [description]
+ * @param  {[type]} stringField
+ * @param  {[type]} object
+ * @return {[type]}
+ */
+x.core.mapper = (function(stringField,object){
 
-		function checkTextNode(obj){
-			if (obj.nodeType === 3 && obj.textContent.match(/\{\{.*\}\}/g)){
-				return true;
-			}
+  /**
+   * [checkTextNode description]
+   * @param  {[type]} obj
+   * @return {[type]}
+   */
+	function checkTextNode(obj){
+		if (obj.nodeType === 3 && obj.textContent.match(/\{\{.*\}\}/g)){
+			return true;
 		}
+	}
 
-		function extractFields(placeholders,Controller,obj){
-			var fields = {};
-			for (var field in placeholders){
-				Controller.addPlaceholder([placeholders[field]],obj);
-				fields[placeholders[field]] = x.core.extractField(placeholders[field],Controller);
-			}
-			return fields;
+
+
+  /**
+   * [extractFields description]
+   * @param  {[type]} placeholders
+   * @param  {[type]} Controller
+   * @param  {[type]} obj
+   * @return {[type]}
+   */
+	function extractFields(placeholders,Controller,obj){
+		var fields = {};
+		for (var field in placeholders){
+			Controller.addPlaceholder([placeholders[field]],obj);
+			fields[placeholders[field]] = x.core.extractField(placeholders[field],Controller);
 		}
+		return fields;
+	}
 
-		function define(DOM,Controller){
-      
-			var placeholders = DOM.match(/{{[^}]+}}/g);
-			return{
-				fields : placeholders,
-				DOM : DOM
-			};
-		}
 
-		function iterate(htmlElement,Controller){
-			if(htmlElement.getAttribute && (htmlElement.hasAttribute('x-repeat') === false ) && (htmlElement.hasAttribute('x-content') === false)){
-				for(var obj in htmlElement.childNodes){
-					if (!isNaN(obj = parseInt(obj))){
-						obj = htmlElement.childNodes[obj];
-						interact(obj,Controller);
-					}
-				}
-      }
-		}
-
-		function interact(obj,Controller){
-			if (checkTextNode(obj)){
-				obj.originalText = obj.wholeText;
-				var placeholders = define(obj.originalText,Controller);
-				placeholders.fields = extractFields(placeholders.fields,Controller,obj);
-				obj.originalFields = placeholders.fields;
-				obj.textContent = x.core.render(obj,placeholders.fields);
-			}else{
-				iterate(obj,Controller);
-			}
-		}
-
-		return {
-			map : function(htmlElement,Controller){
-				iterate(htmlElement,Controller);
-			}
+  /**
+   * [define description]
+   * @param  {[type]} DOM
+   * @param  {[type]} Controller
+   * @return {[type]}
+   */
+	function define(DOM,Controller){
+    
+		var placeholders = DOM.match(/{{[^}]+}}/g);
+		return{
+			fields : placeholders,
+			DOM : DOM
 		};
-	})(x);
+	}
+
+
+
+  /**
+   * [iterate description]
+   * @param  {[type]} htmlElement
+   * @param  {[type]} Controller
+   * @return {[type]}
+   */
+	function iterate(htmlElement,Controller){
+		if(htmlElement.getAttribute && (htmlElement.hasAttribute('x-repeat') === false ) && (htmlElement.hasAttribute('x-content') === false)){
+			for(var obj in htmlElement.childNodes){
+				if (!isNaN(obj = parseInt(obj))){
+					obj = htmlElement.childNodes[obj];
+					interact(obj,Controller);
+				}
+			}
+    }
+	}
+
+
+
+  /**
+   * [interact description]
+   * @param  {[type]} obj
+   * @param  {[type]} Controller
+   * @return {[type]}
+   */
+	function interact(obj,Controller){
+		if (checkTextNode(obj)){
+			obj.originalText = obj.wholeText;
+			var placeholders = define(obj.originalText,Controller);
+			placeholders.fields = extractFields(placeholders.fields,Controller,obj);
+			obj.originalFields = placeholders.fields;
+			obj.textContent = x.core.render(obj,placeholders.fields);
+		}else{
+			iterate(obj,Controller);
+		}
+	}
+
+	return {
+
+
+    
+    /**
+     * [map description]
+     * @param  {[type]} htmlElement
+     * @param  {[type]} Controller
+     * @return {[type]}
+     */
+		map : function(htmlElement,Controller){
+			iterate(htmlElement,Controller);
+		}
+	};
+})(x);
 }(this.x));
+
+
+
+
 //File : src/core/coreMethods/x.core.parse.js
 
 (function(x){
 
   'use strict';
-  
+  /**
+   * [parse description]
+   * @return {[type]}
+   */
   x.core.parse = function(){
 
     if(typeof arguments[0] == 'string'){
-      applyParserGroup(arguments[0],arguments[1],arguments[2]);
+      return applyParserGroup(arguments[0],arguments[1],arguments[2]);
     }else{
       var controllerElements = document.querySelectorAll('[x-controller]');
       for(var element in controllerElements){
@@ -264,12 +329,30 @@ x.core.extractField = function(stringField,object,index){
       }
     }
 
+
+    /**
+     * [applyParserGroup description]
+     * @param  {[type]} parserGroup
+     * @param  {[type]} element
+     * @param  {[type]} controller
+     * @return {[type]}
+     */
     function applyParserGroup(parserGroup,element,controller){
       for (var parser in x.core.parsers[parserGroup]){
         applyParser(parser,x.core.parsers[parserGroup][parser],element,controller);
       }
     }
 
+
+
+    /**
+     * [applyParser description]
+     * @param  {[type]} selector
+     * @param  {[type]} parser
+     * @param  {[type]} element
+     * @param  {[type]} controller
+     * @return {[type]}
+     */
     function applyParser(selector,parser,element,controller){
       if (parser != 'x-controller'){
         var ELs = element.querySelectorAll('['+selector+']');
@@ -287,6 +370,12 @@ x.core.extractField = function(stringField,object,index){
 (function(x){
 
 	'use strict';
+	/**
+	 * [render description]
+	 * @param  {[type]} obj
+	 * @param  {[type]} fields
+	 * @return {[type]}
+	 */
 	x.core.render = function(obj,fields){
 		var text = obj.originalText;
 		for (var field in fields){
@@ -301,6 +390,15 @@ x.core.extractField = function(stringField,object,index){
 
 (function(x){
 	'use strict';
+  /**
+   * [repeatIterator description]
+   * @param  {[type]} statement
+   * @param  {[type]} data
+   * @param  {[type]} template
+   * @param  {[type]} element
+   * @param  {[type]} controller
+   * @return {[type]}
+   */
 	x.core.repeatIterator = function(statement,data,template,element,controller){
 
     var tmplVars = template.match(/\{\{.*\}\}/g);
@@ -328,6 +426,11 @@ x.core.extractField = function(stringField,object,index){
 
 (function(x){
 	'use strict';
+	/**
+	 * [serialize description]
+	 * @param  {[type]} data
+	 * @return {[type]}
+	 */
 	x.core.serialize = function(data){
 		var result = '';
 		for(var field in data){
@@ -339,8 +442,15 @@ x.core.extractField = function(stringField,object,index){
 
 //File : src/core/parsers/x-ajax.js
 
+
 (function(x){
 	'use strict';
+	/**
+	 * [description]
+	 * @param  {[type]} element
+	 * @param  {[type]} controller
+	 * @return {[type]}
+	 */
 	x.core.addParser('x-ajax',function(element,controller){
 		var URL = element.getAttribute('x-ajax');
 
@@ -380,6 +490,12 @@ x.core.extractField = function(stringField,object,index){
 
 (function(x){
 'use strict';
+/**
+ * [description]
+ * @param  {[type]} element
+ * @param  {[type]} controller
+ * @return {[type]}
+ */
 x.core.addParser('x-content',function(element,controller){
 	var URL = element.getAttribute('x-content');
 	var collection = element.getAttribute('x-collection') || x.core.randomString();
@@ -387,9 +503,6 @@ x.core.addParser('x-content',function(element,controller){
 	var root = 'data' || element.getAttribute('x-root');
 	var result = '';
 	var tmplVars = tmpl.match(/\{\{.*\}\}/g);
-
-
-
 
 	x.core.ajax({
 		url : URL,
@@ -418,6 +531,11 @@ x.core.addParser('x-content',function(element,controller){
 
 (function(x){
 'use strict';
+/**
+ * [description]
+ * @param  {[type]} element
+ * @return {[type]}
+ */
 x.core.addParser('x-controller',function(element){
 
 	var controller = element.getAttribute('x-controller');
@@ -430,6 +548,14 @@ x.core.addParser('x-controller',function(element){
 (function(x){
 'use strict';
 
+
+
+/**
+ * [description]
+ * @param  {[type]} element
+ * @param  {[type]} controller
+ * @return {[type]}
+ */
 x.core.addParser('events.x-click',function(element,controller){
 
   var action = element.getAttribute('x-click');
@@ -458,6 +584,14 @@ x.core.addParser('events.x-click',function(element,controller){
 
   });
 
+
+
+/**
+ * [description]
+ * @param  {[type]} element
+ * @param  {[type]} controller
+ * @return {[type]}
+ */
 x.core.addParser('events.x-mouseover',function(element,controller){
 
   var action = element.getAttribute('x-mouseover');
@@ -488,6 +622,12 @@ x.core.addParser('events.x-mouseover',function(element,controller){
 
 (function(x){
 'use strict';
+/**
+ * [description]
+ * @param  {[type]} element
+ * @param  {[type]} controller
+ * @return {[type]}
+ */
 x.core.addParser('x-repeat',function(element,controller){
 	var statement = element.getAttribute('x-repeat').trim().split('in');
 	var data = statement[1].trim();
@@ -506,7 +646,9 @@ x.core.addParser('x-repeat',function(element,controller){
    
 (function(x){
   'use strict';
-
+  /**
+   * [Collection description]
+   */
   x.Collection = function(){};
 
 })(this.x);
@@ -514,16 +656,19 @@ x.core.addParser('x-repeat',function(element,controller){
 //File : src/controller.js
 
 (function(x){
-'use strict';
+  'use strict';
 /**
  * Controller definition
  * @param      {string}   controllerName
  * @param      {HTMLElement}   controllerName
  */
-x.Controller = function(){
+ x.Controller = function(){
 
-  //Check if this controller is being generated by DOM or API
-  if (arguments[1].tagName || arguments[1] == 'API_CALL'){
+
+  /**
+   * Check if this controller is being generated by DOM or API
+   */
+   if (arguments[1].tagName || arguments[1] == 'API_CALL'){
 
     this.htmlElement = arguments[1];
     this.controllerName = arguments[0];
@@ -531,7 +676,13 @@ x.Controller = function(){
     this.placeholders = [];
     return {
 
-      addPlaceholder : function(field,place){
+
+      /**
+       * [addPlaceholder description]
+       * @param {[type]} field
+       * @param {[type]} place
+       */
+       addPlaceholder : function(field,place){
         
         if (!this.placeholders)
           this.placeholders = {};
@@ -541,11 +692,24 @@ x.Controller = function(){
         this.placeholders[field].push(place);
       },
 
-      getPlaceholders : function(index){
+
+      /**
+       * [getPlaceholders description]
+       * @param  {[type]} index
+       * @return {[type]}
+       */
+       getPlaceholders : function(index){
         return this.placeholders[index];
       },
 
-      watch : function(field,callback){
+
+      /**
+       * [watch description]
+       * @param  {[type]}   field
+       * @param  {Function} callback
+       * @return {[type]}
+       */
+       watch : function(field,callback){
         if (!this.watchers)
           this.watchers = {};
         if (!this.watchers[field])
@@ -554,7 +718,14 @@ x.Controller = function(){
         this.watchers[field].push(callback);
 
       },
-      xApply : function(action,params){
+
+      /**
+       * [xApply description]
+       * @param  {[type]} action
+       * @param  {[type]} params
+       * @return {[type]}
+       */
+       xApply : function(action,params){
 
         action.apply(this,params);
 
@@ -581,53 +752,80 @@ x.Controller = function(){
           }.bind(this));
         }
       },
-      appendModel : function(model){
+
+
+      /**
+       * [appendModel description]
+       * @param  {[type]} model
+       * @return {[type]}
+       */
+       appendModel : function(model){
         this[model.getModelName()] = model; 
       }
     };
     
   }else{
+    /**
+     * Controller DO NOT exists
+     */
+     if (x.controllers[arguments[0]] === undefined){
+      /**
+       * Created the contoller
+       */
+       x.controllers[arguments[0]] = new x.Controller(arguments[0],'API_CALL');
+     }
 
-    if (x.controllers[arguments[0]] === undefined){
-      //Controller DO NOT exists
-      x.controllers[arguments[0]] = new x.Controller(arguments[0],'API_CALL');
-    }
 
-
-    arguments[1][arguments[1].length-1].apply(x.controllers[arguments[0]],x.core.checkDependencies(arguments[1]));
-    // arguments[1][arguments[1].length-1].call(x.controllers[controllerName]);
-    return x.controllers[arguments[0]];
-  }
-};
+     arguments[1][arguments[1].length-1].apply(x.controllers[arguments[0]],x.core.checkDependencies(arguments[1]));
+     return x.controllers[arguments[0]];
+   }
+ };
 
 })(this.x);
+
 //File : src/controller.js
 
 (function(x){
-'use strict';
-
-x.Model = function(controller,htmlElement){
+  'use strict';
+/**
+ * [Model description]
+ * @param {[type]} controller
+ * @param {[type]} htmlElement
+ */
+ x.Model = function(controller,htmlElement){
   var self = this;
   var data = {};
   var modelName = htmlElement.getAttribute('x-model');
 
   var htmlElements = [htmlElement];
 
-  var getInputs = function(){
-    var elements = htmlElement.getElementsByTagName('input');
-    var temp = {};
-    for(var element in elements){
-      if (typeof elements[element]  == 'object'){
-        var field = elements[element].getAttribute('name');
-        temp[field] = elements[element].value;
-        elements[element].addEventListener('keypress',inputChange);
-        elements[element].addEventListener('change',inputChange);
-      }
-    }
-    return absorveData(data,temp);
-  };
 
-  var inputChange = function(e){
+  /**
+    * [getInputs description]
+    * @return {[type]}
+    */
+    var getInputs = function(){
+      var elements = htmlElement.getElementsByTagName('input');
+      var temp = {};
+      for(var element in elements){
+        if (typeof elements[element]  == 'object'){
+          var field = elements[element].getAttribute('name');
+          temp[field] = elements[element].value;
+          elements[element].addEventListener('keypress',inputChange);
+          elements[element].addEventListener('change',inputChange);
+        }
+      }
+      return absorveData(data,temp);
+    };
+
+
+
+  /**
+   * [inputChange description]
+   * @param  {[type]} e
+   * @return {[type]}
+   */
+   var inputChange = function(e){
     var el = e.target;
     var name = el.getAttribute('name');
     var value = el.value;
@@ -635,29 +833,53 @@ x.Model = function(controller,htmlElement){
     broadcast(data);
   };
 
-  var absorveData = function(data,newData){
+
+  /**
+   * [absorveData description]
+   * @param  {[type]} data
+   * @param  {[type]} newData
+   * @return {[type]}
+   */
+   var absorveData = function(data,newData){
     for(var field in newData){
       data[field] = newData[field];
     }
     return data;
   };
 
-  var broadcast = function(data){
+
+  /**
+   * [broadcast description]
+   * @param  {[type]} data
+   * @return {[type]}
+   */
+   var broadcast = function(data){
     for(var propertie in data){
       applyValues(propertie,data[propertie]);
     }
   };
 
-  var applyValues = function(propertie,value){
+
+  /**
+   * [applyValues description]
+   * @param  {[type]} propertie
+   * @param  {[type]} value
+   * @return {[type]}
+   */
+   var applyValues = function(propertie,value){
     htmlElements.forEach(function(element){
       element.querySelectorAll('[name="'+propertie+'"]').forEach(function(a,b){
         a.value = value;
       });
     });
-
   };
 
-  var structByDom = function(){
+
+  /**
+   * [structByDom description]
+   * @return {[type]}
+   */
+   var structByDom = function(){
     absorveData(getInputs(),data);
     return Model;
   };
@@ -667,18 +889,40 @@ x.Model = function(controller,htmlElement){
 
   var Model = this;
   return {
-    appendDom : function(element){
+
+    /**
+     * [appendDom description]
+     * @param  {[type]} element
+     * @return {[type]}
+     */
+     appendDom : function(element){
       htmlElements.push(element);
     },
-    getModelName : function(){
+
+    /**
+     * [getModelName description]
+     * @return {[type]}
+     */
+     getModelName : function(){
       return modelName;
     },
-    getData : function(){
+
+    /**
+     * [getData description]
+     * @return {[type]}
+     */
+     getData : function(){
       var result = {};
       result[modelName] = data;
       return result;
     },
-    edit : function(record){
+
+    /**
+     * [edit description]
+     * @param  {[type]} record
+     * @return {[type]}
+     */
+     edit : function(record){
       broadcast(record);
       return record;
     }
@@ -690,9 +934,13 @@ x.Model = function(controller,htmlElement){
 
 (function(x){
   'use strict';
-
+  /**
+   * [Service description]
+   */
   x.Service = function(){
-
+  		/**
+  		 * Creating the service
+  		 */
 		x.services[arguments[0]] = new arguments[1][arguments[1].length-1]();
   };
 
@@ -700,12 +948,13 @@ x.Model = function(controller,htmlElement){
 //File : src/methods/x.init.js
 (function(x,world){
 	'use strict';
+
 	/**
 	 * Check and load Controller dependencies
-	 * @param      {Array}   dependenciesNames
+	 * @return {[type]}
 	 */
 	x.methods.init = function(){
-		x.core.parse();
+		return x.core.parse();
 	};
 	document.addEventListener('DOMContentLoaded', x.methods.init, false);
 })(this.x,this);

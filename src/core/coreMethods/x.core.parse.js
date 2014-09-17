@@ -1,13 +1,20 @@
+
+
+
+
 //File : src/core/coreMethods/x.core.parse.js
 
 (function(x){
 
   'use strict';
-  
+  /**
+   * [parse description]
+   * @return {[type]}
+   */
   x.core.parse = function(){
 
     if(typeof arguments[0] == 'string'){
-      applyParserGroup(arguments[0],arguments[1],arguments[2]);
+      return applyParserGroup(arguments[0],arguments[1],arguments[2]);
     }else{
       var controllerElements = document.querySelectorAll('[x-controller]');
       for(var element in controllerElements){
@@ -26,12 +33,30 @@
       }
     }
 
+
+    /**
+     * [applyParserGroup description]
+     * @param  {[type]} parserGroup
+     * @param  {[type]} element
+     * @param  {[type]} controller
+     * @return {[type]}
+     */
     function applyParserGroup(parserGroup,element,controller){
       for (var parser in x.core.parsers[parserGroup]){
         applyParser(parser,x.core.parsers[parserGroup][parser],element,controller);
       }
     }
 
+
+
+    /**
+     * [applyParser description]
+     * @param  {[type]} selector
+     * @param  {[type]} parser
+     * @param  {[type]} element
+     * @param  {[type]} controller
+     * @return {[type]}
+     */
     function applyParser(selector,parser,element,controller){
       if (parser != 'x-controller'){
         var ELs = element.querySelectorAll('['+selector+']');

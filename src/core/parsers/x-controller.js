@@ -2,6 +2,11 @@
 
 (function(x){
 'use strict';
+/**
+ * [description]
+ * @param  {[type]} element
+ * @return {[type]}
+ */
 x.core.addParser('x-controller',function(element){
 
 	var controller = element.getAttribute('x-controller');
