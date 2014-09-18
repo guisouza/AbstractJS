@@ -21,6 +21,9 @@ world.x = function(){
     services : {
 
     },
+    utils : {
+
+    },
     core : {
       parsers : {
 
@@ -141,16 +144,38 @@ x.core.ajax = function(args){
  * @param      {Array}   dependenciesNames
  */
 x.core.checkDependencies = function(dependencies){
+
+	if (typeof dependencies !== 'object'){
+    dependencies = dependencies.toString().match(/\([^/)]+\)/)[0].replace(/\(/,'').replace(/\)/,'');
+    if (dependencies.indexOf(',') !== -1){
+      dependencies =dependencies.split(',');
+
+      dependencies.push(false);
+      console.log(dependencies);
+    }else{
+      dependencies = [dependencies,false];
+
+    }
+  }
+  
 	var rDependencies = [];
 	for(var dependencie in dependencies){
 		if (dependencie < dependencies.length-1){
+
+      console.log(x.utils);
+      console.log(x.services);
+
 			if (x.services[dependencies[dependencie]]){
 				rDependencies[dependencie] = x.services[dependencies[dependencie]];
-			}else{
-				throw(dependencies[dependencie]+' dependencie Not Fount =[');
-			}
+			}else if (x.utils[dependencies[dependencie]]){
+        rDependencies[dependencie] = x.utils[dependencies[dependencie]];
+      }else{
+        throw(dependencies[dependencie]+' dependencie Not Fount =[');
+      }
 		}
 	}
+
+  console.log(rDependencies);
 	return rDependencies;
 };
 })(this.x);
@@ -642,6 +667,47 @@ x.core.addParser('x-repeat',function(element,controller){
 });
 })(this.x);
 
+
+
+//File : src/controller.js
+
+;(function(x){
+  'use strict';
+  /**
+   * [Service description]
+   */
+  x.Util = function(){
+  		/**
+  		 * Creating the service
+  		 */
+      
+
+    var dependencies = x.core.checkDependencies(arguments[1]);
+    if (typeof arguments[1] === 'object'){
+        x.utils[arguments[0]] = new arguments[1][arguments[1].length-1](dependencies);
+     }else{
+        x.utils[arguments[0]] = new arguments[1](dependencies); 
+     }
+  };
+
+})(this.x);
+ x.Util('xHttp',[function(){
+
+	var defaultMessage = 5;
+
+	return{
+		get : function(url,callback){
+			var args = {};
+			args.method = 'GET';
+			args.url = url;
+			args.callback = function(retorno){
+				callback(retorno);
+			};
+			x.core.ajax(args);
+		}		
+	};
+}]);
+
 //File : src/controller.js
    
 (function(x){
@@ -730,15 +796,18 @@ x.core.addParser('x-repeat',function(element,controller){
         action.apply(this,params);
 
         var changes = action.toString().match(/(this..+?\s*=)|(this..+?\s*.splice)|(this..+?\s*.split)/g);
-
+        console.log(changes);
         if (changes !== null){
           console.log(changes);
           changes.forEach(function(changed,repI){
 
             changed = changed.replace(/(\s?=)|(this\.)|(this\[)/,'').replace(/\s?=/,'').replace(/\'\]/,'').replace("'",'').replace(/\.split/,'').replace(/\.splice/,'');
-
-            for (var watcher in this.watchers[changed]){
-              this.watchers[changed][watcher]();
+            console.log(changed);
+            console.log(this.watchers);
+            if (this.watchers){
+              for (var watcher in this.watchers[changed]){
+                this.watchers[changed][watcher]();
+              }
             }
 
             var links =  this.getPlaceholders('{{'+changed+'}}');
@@ -775,8 +844,17 @@ x.core.addParser('x-repeat',function(element,controller){
        x.controllers[arguments[0]] = new x.Controller(arguments[0],'API_CALL');
      }
 
+    var controller = x.controllers[arguments[0]];
+    console.log('teste');
+    var dependencies = x.core.checkDependencies(arguments[1]);
+    console.log('teste');
 
-     arguments[1][arguments[1].length-1].apply(x.controllers[arguments[0]],x.core.checkDependencies(arguments[1]));
+    if (typeof arguments[1] === 'object'){
+        arguments[1][arguments[1].length-1].apply(controller,dependencies);
+     }else{
+        arguments[1].apply(controller,dependencies); 
+     }
+     
      return x.controllers[arguments[0]];
    }
  };
@@ -941,7 +1019,14 @@ x.core.addParser('x-repeat',function(element,controller){
   		/**
   		 * Creating the service
   		 */
-		x.services[arguments[0]] = new arguments[1][arguments[1].length-1]();
+      
+
+    var dependencies = x.core.checkDependencies(arguments[1]);
+    if (typeof arguments[1] === 'object'){
+        x.services[arguments[0]] = new arguments[1][arguments[1].length-1](dependencies);
+     }else{
+        x.services[arguments[0]] = new arguments[1](dependencies); 
+     }
   };
 
 })(this.x);

@@ -75,15 +75,18 @@
         action.apply(this,params);
 
         var changes = action.toString().match(/(this..+?\s*=)|(this..+?\s*.splice)|(this..+?\s*.split)/g);
-
+        console.log(changes);
         if (changes !== null){
           console.log(changes);
           changes.forEach(function(changed,repI){
 
             changed = changed.replace(/(\s?=)|(this\.)|(this\[)/,'').replace(/\s?=/,'').replace(/\'\]/,'').replace("'",'').replace(/\.split/,'').replace(/\.splice/,'');
-
-            for (var watcher in this.watchers[changed]){
-              this.watchers[changed][watcher]();
+            console.log(changed);
+            console.log(this.watchers);
+            if (this.watchers){
+              for (var watcher in this.watchers[changed]){
+                this.watchers[changed][watcher]();
+              }
             }
 
             var links =  this.getPlaceholders('{{'+changed+'}}');
@@ -120,8 +123,17 @@
        x.controllers[arguments[0]] = new x.Controller(arguments[0],'API_CALL');
      }
 
+    var controller = x.controllers[arguments[0]];
+    console.log('teste');
+    var dependencies = x.core.checkDependencies(arguments[1]);
+    console.log('teste');
 
-     arguments[1][arguments[1].length-1].apply(x.controllers[arguments[0]],x.core.checkDependencies(arguments[1]));
+    if (typeof arguments[1] === 'object'){
+        arguments[1][arguments[1].length-1].apply(controller,dependencies);
+     }else{
+        arguments[1].apply(controller,dependencies); 
+     }
+     
      return x.controllers[arguments[0]];
    }
  };

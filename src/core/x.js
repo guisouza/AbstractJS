@@ -21,6 +21,9 @@ world.x = function(){
     services : {
 
     },
+    utils : {
+
+    },
     core : {
       parsers : {
 

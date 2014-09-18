@@ -41,6 +41,8 @@ module.exports = function(grunt) {
         'src/core/x.js',
         'src/core/coreMethods/*.js',
         'src/core/parsers/*.js',
+        'src/core/Utils.js',
+        'src/core/utils/*.js',
         'src/core/*.js',
         'src/methods/*.js'
       ],
@@ -78,7 +80,7 @@ module.exports = function(grunt) {
   config.watch = {};
   config.watch.scripts = {
     files: ['src/**/*.js','src/*.js'],
-    tasks: ['jshint','concat','jasmine','uglify'],
+    tasks: ['jshint','concat','uglify'],
     options: {
       spawn: false,
     }
@@ -92,6 +94,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask('test', ['jasmine']);
 
-  grunt.registerTask('default', ['jshint', 'concat','jasmine','watch', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'concat','watch', 'uglify']);
 
 };
