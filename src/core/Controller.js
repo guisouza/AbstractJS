@@ -75,14 +75,10 @@
         action.apply(this,params);
 
         var changes = action.toString().match(/(this..+?\s*=)|(this..+?\s*.splice)|(this..+?\s*.split)/g);
-        console.log(changes);
         if (changes !== null){
-          console.log(changes);
           changes.forEach(function(changed,repI){
 
             changed = changed.replace(/(\s?=)|(this\.)|(this\[)/,'').replace(/\s?=/,'').replace(/\'\]/,'').replace("'",'').replace(/\.split/,'').replace(/\.splice/,'');
-            console.log(changed);
-            console.log(this.watchers);
             if (this.watchers){
               for (var watcher in this.watchers[changed]){
                 this.watchers[changed][watcher]();
@@ -124,9 +120,9 @@
      }
 
     var controller = x.controllers[arguments[0]];
-    console.log('teste');
     var dependencies = x.core.checkDependencies(arguments[1]);
-    console.log('teste');
+
+
 
     if (typeof arguments[1] === 'object'){
         arguments[1][arguments[1].length-1].apply(controller,dependencies);

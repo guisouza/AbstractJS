@@ -148,10 +148,8 @@ x.core.checkDependencies = function(dependencies){
 	if (typeof dependencies !== 'object'){
     dependencies = dependencies.toString().match(/\([^/)]+\)/)[0].replace(/\(/,'').replace(/\)/,'');
     if (dependencies.indexOf(',') !== -1){
-      dependencies =dependencies.split(',');
-
+      dependencies = dependencies.split(',');
       dependencies.push(false);
-      console.log(dependencies);
     }else{
       dependencies = [dependencies,false];
 
@@ -162,9 +160,6 @@ x.core.checkDependencies = function(dependencies){
 	for(var dependencie in dependencies){
 		if (dependencie < dependencies.length-1){
 
-      console.log(x.utils);
-      console.log(x.services);
-
 			if (x.services[dependencies[dependencie]]){
 				rDependencies[dependencie] = x.services[dependencies[dependencie]];
 			}else if (x.utils[dependencies[dependencie]]){
@@ -174,8 +169,6 @@ x.core.checkDependencies = function(dependencies){
       }
 		}
 	}
-
-  console.log(rDependencies);
 	return rDependencies;
 };
 })(this.x);
@@ -796,14 +789,10 @@ x.core.addParser('x-repeat',function(element,controller){
         action.apply(this,params);
 
         var changes = action.toString().match(/(this..+?\s*=)|(this..+?\s*.splice)|(this..+?\s*.split)/g);
-        console.log(changes);
         if (changes !== null){
-          console.log(changes);
           changes.forEach(function(changed,repI){
 
             changed = changed.replace(/(\s?=)|(this\.)|(this\[)/,'').replace(/\s?=/,'').replace(/\'\]/,'').replace("'",'').replace(/\.split/,'').replace(/\.splice/,'');
-            console.log(changed);
-            console.log(this.watchers);
             if (this.watchers){
               for (var watcher in this.watchers[changed]){
                 this.watchers[changed][watcher]();
@@ -845,9 +834,9 @@ x.core.addParser('x-repeat',function(element,controller){
      }
 
     var controller = x.controllers[arguments[0]];
-    console.log('teste');
     var dependencies = x.core.checkDependencies(arguments[1]);
-    console.log('teste');
+
+
 
     if (typeof arguments[1] === 'object'){
         arguments[1][arguments[1].length-1].apply(controller,dependencies);

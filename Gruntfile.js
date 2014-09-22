@@ -80,7 +80,7 @@ module.exports = function(grunt) {
   config.watch = {};
   config.watch.scripts = {
     files: ['src/**/*.js','src/*.js'],
-    tasks: ['jshint','concat','uglify'],
+    tasks: ['jshint','concat','uglify','jasmine'],
     options: {
       spawn: false,
     }
@@ -94,6 +94,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask('test', ['jasmine']);
 
-  grunt.registerTask('default', ['jshint', 'concat','watch', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'concat','jasmine','watch', 'uglify']);
 
 };
