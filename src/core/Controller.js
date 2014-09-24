@@ -76,7 +76,12 @@
 
         var changes = action.toString().match(/(this..+?\s*=)|(this..+?\s*.splice)|(this..+?\s*.split)/g);
         if (changes !== null){
-          changes.forEach(function(changed,repI){
+          var i = 0;
+          while (i < changes.length){
+            var changed = changes[i];
+            var repI = i;
+            console.log(changed);
+
 
             changed = changed.replace(/(\s?=)|(this\.)|(this\[)/,'').replace(/\s?=/,'').replace(/\'\]/,'').replace("'",'').replace(/\.split/,'').replace(/\.splice/,'');
             if (this.watchers){
@@ -93,7 +98,8 @@
                 links[link].textContent = x.core.render(links[link],links[link].originalFields);
               }
             }
-          }.bind(this));
+            i++;
+          }
         }
       },
 
