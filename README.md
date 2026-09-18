@@ -42,7 +42,7 @@ for example :
 			<td>{{age}}</td>
 			<td>{{company.name}}</td>
 			<td>{{company.area.name}}</td>
-			<td><button x-click="editar({{id}})">Edit</button></td>
+			<td><button x-click="edit({{id}})">Edit</button></td>
 		</tr>
 	</tbody>
 </table>
